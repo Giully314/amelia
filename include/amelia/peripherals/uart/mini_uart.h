@@ -21,6 +21,8 @@ void uart_send(char c);
 // Receive a byte.
 char uart_recv();
 
+// Send a string.
+// Precondition: the string must be null terminated.
 void uart_send_string(const char* msg);
 
 #endif  // _AMELIA_HARDWARE_MINI_UART_H
