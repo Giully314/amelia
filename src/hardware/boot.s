@@ -24,6 +24,9 @@ proc_hang:
     b proc_hang
 
 master:
+    // memzero function accepts 2 args, start address of memory and size.
+    // Note that in arm, the first 7 arguments passed to a function are passed
+    // via the registers x0-x6.
     adr x0, bss_begin
     adr x1, bss_end
     sub x1, x1, x0
