@@ -1,9 +1,11 @@
+#include <amelia/memory.h>
 // The kernel is loaded at 0x80000000. This file is placed at that position
 // by the boot.ld script.
 // This file is the first thing that get executed, it setup the stack and 
 // calls start() in the start.c file.
 
-.section ".text.boot"
+
+.section .text.boot
 
 .global _start  
 _start: 

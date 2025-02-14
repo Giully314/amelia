@@ -1,6 +1,5 @@
 // utils.s
 // PURPOSE: implementation of low level utilities accessing hardware.
-
 .section .text
 
 // The delay function is implemented by subtracting 1 by the time specified. 
