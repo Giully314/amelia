@@ -1,6 +1,7 @@
 // src/hardware/mini_uart.c
 #include<amelia/peripherals/uart/mini_uart.h>
 #include <amelia/peripherals/gpio.h>
+#include <amelia/peripherals/aux.h>
 #include <amelia/utils.h>
 
 void uart_init() {
@@ -19,7 +20,7 @@ void uart_init() {
 
     // This set the gpio to neither pull-up/pull-down.
     // Page 101 of the manual. 
-    put32(GPUUD, 0);
+    put32(GPPUD, 0);
     delay(150);
     put32(GPPUDCLK0, (1 << 14) | (1 << 15));
     delay(150);
@@ -50,7 +51,7 @@ char uart_recv() {
     // This check if the first bit of the data status reg is set, so it means
     // that the FIFO buffer has at least one byte that can be read. 
     while (1) {
-        if (get32(AUX_MU_LSR_REG) & 0x1) {
+        if (get32(AUX_MU_LSR_REG) & 0x01) {
             break;
         }
     }
@@ -60,6 +61,6 @@ char uart_recv() {
 
 void uart_send_string(const char* msg) {
     for (int i = 0; msg[i] != '\0'; ++i) {
-        uart_send(msg[i]);
+        // uart_send(msg[i]);
     }
 }
