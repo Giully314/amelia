@@ -2,3 +2,4 @@ build
 .vscode
 kernel8.img
 emulate
+.DS_Store
