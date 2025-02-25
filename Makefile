@@ -3,15 +3,12 @@ SRC_DIR = src
 BUILD_DIR := build
 
 CC := clang
-CFLAGS := -I$(INCLUDE_DIR) -MMD -std=c23 --target=aarch64-unknown-linux-gnu
-CFLAGS += -Wall -nostdlib -nostartfiles -mgeneral-regs-only
-
-AS := as
-ASFLAGS := -c --target=aarch64-unknown-linux-gnu -I$(INCLUDE_DIR)
+CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding -nostdinc -mcpu=cortex-a53+nosimd
+CFLAGS += -Wall -nostdlib -mgeneral-regs-only -O2
 
 LINKER_SCRIPT := src/kernel.ld
 LD = ld.lld
-LDFLAGS := -T $(LINKER_SCRIPT)
+LDFLAGS := -T $(LINKER_SCRIPT) -m aarch64elf -nostdlib 
 
 HD := $(SRC_DIR)/hardware
 PERIPHERALS_DIR := $(SRC_DIR)/peripherals
@@ -34,9 +31,9 @@ OBJ_FILES += $(ASM_FILES:$(SRC_DIR)/%.S=$(BUILD_DIR)/%.o)
 DEP_FILES := $(OBJ_FILES:%.o=%.d)
 -include $(DEP_FILES)
 
-$(info    C_FILES is $(C_FILES))
-$(info    ASM_FILES is $(ASM_FILES))
-$(info    OBJ_FILES is $(OBJ_FILES))
+# $(info    C_FILES is $(C_FILES))
+# $(info    ASM_FILES is $(ASM_FILES))
+# $(info    OBJ_FILES is $(OBJ_FILES))
 
 all: kernel8.img
 
@@ -46,13 +43,17 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.S
 	mkdir -p  $(@D)
-	$(CC) $< -o $@ $(ASFLAGS)
+	$(CC) $< -o $@ $(CFLAGS)
 
 
 # 8 denotes armv8. Is a name convention for telling to boot in 64bit mode.
 kernel8.img: $(LINKER_SCRIPT) $(OBJ_FILES)
 	$(LD) $(LDFLAGS) -o $(BUILD_DIR)/kernel8.elf $(OBJ_FILES)
-	llvm-objcopy $(BUILD_DIR)/kernel8.elf -O binary kernel8.img
+	llvm-objcopy -O binary $(BUILD_DIR)/kernel8.elf kernel8.img
+
+qemu-run: kernel8.img
+	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -kernel kernel8.img
+
 
 clean:
 	rm -rf $(BUILD_DIR) *.img
