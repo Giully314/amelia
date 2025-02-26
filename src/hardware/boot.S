@@ -5,7 +5,7 @@
 // calls start() in the start.c file.
 
 
-.section .text.boot
+.section ".text.boot"
 
 .global _start  
 _start: 
