@@ -9,6 +9,6 @@ void kernel_main() {
     mini_uart_send_string("hello world\r\n");
 
     while (1) {
-        mini_uart_send(uart_recv());
+        mini_uart_send(mini_uart_recv());
     }
 }
