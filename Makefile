@@ -54,6 +54,9 @@ kernel8.img: $(LINKER_SCRIPT) $(OBJ_FILES)
 qemu-run: kernel8.img
 	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -kernel kernel8.img
 
+qemu-uart-run: kernel8.img
+	qemu-system-aarch64 -M raspi3b -serial stdio -serial null -kernel kernel8.img
+
 
 clean:
 	rm -rf $(BUILD_DIR) *.img
