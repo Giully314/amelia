@@ -1,4 +1,4 @@
-// src/hardware/mini_uart.c
+// src/peripherals/uart/mini_uart.c
 #include<amelia/peripherals/uart/mini_uart.h>
 #include <amelia/peripherals/gpio.h>
 #include <amelia/peripherals/aux.h>

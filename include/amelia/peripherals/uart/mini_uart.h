@@ -8,8 +8,8 @@
 //  The mini UART implementation has smaller FIFO, no control flow and it is more prone to lose 
 //  data at higher baudrate with respect to the PL011 (UART).
 //
-#ifndef _AMELIA_HARDWARE_MINI_UART_H
-#define _AMELIA_HARDWARE_MINI_UART_H
+#ifndef _AMELIA_PERIPHERALS_MINI_UART_H
+#define _AMELIA_PERIPHERALS_MINI_UART_H
 
 // Initialize UART section.
 void mini_uart_init();
@@ -25,4 +25,4 @@ char mini_uart_recv();
 // Precondition: the string must be null terminated.
 void mini_uart_send_string(const char* msg);
 
-#endif  // _AMELIA_HARDWARE_MINI_UART_H
+#endif  // _AMELIA_PERIPHERALS_MINI_UART_H
