@@ -7,7 +7,7 @@
 #ifndef _AMELIA_UTILS_H
 #define _AMELIA_UTILS_H
 
-// Wait for time specified in nanoseconds.
+// Wait for time specified in cycles.
 extern void delay(unsigned long time);
 
 // Write 32 bits to a device specified by id.
