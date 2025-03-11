@@ -16,6 +16,8 @@
 
 #define LOW_MEMORY (2 * SECTION_SIZE)
 
+#define STACK_SIZE (1 << 16)
+
 #ifndef __ASSEMBLER__
 
 void memzero(unsigned long src, unsigned long num_bytes);

@@ -3,7 +3,8 @@ SRC_DIR = src
 BUILD_DIR := build
 
 CC := clang
-CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding -nostdinc -mcpu=cortex-a53+nosimd
+CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding -nostdinc 
+CFLAGS += -mcpu=cortex-a53+nosimd
 CFLAGS += -Wall -nostdlib -mgeneral-regs-only -O2
 
 LINKER_SCRIPT := src/kernel.ld
@@ -52,11 +53,12 @@ kernel8.img: $(LINKER_SCRIPT) $(OBJ_FILES)
 	llvm-objcopy -O binary $(BUILD_DIR)/kernel8.elf kernel8.img
 
 qemu-run: kernel8.img
-	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -kernel kernel8.img
+	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -kernel build/kernel8.elf
 
 qemu-uart-run: kernel8.img
-	qemu-system-aarch64 -M raspi3b -serial stdio -serial null -kernel kernel8.img
+	qemu-system-aarch64 -M raspi3b -serial stdio -kernel build/kernel8.elf
 
+qemu-clean-run: clean qemu-uart-run
 
 clean:
 	rm -rf $(BUILD_DIR) *.img

@@ -30,7 +30,7 @@ void uart_init() {
     put32(UART_CR_REG, 0);
 
     // Clear interrupt register.
-    put32(UART_ICR_REG, 0x7ff);
+    put32(UART_ICR_REG, 0);
 
     // Set baud rate to 115200.
     put32(UART_IBRD_REG, 2);

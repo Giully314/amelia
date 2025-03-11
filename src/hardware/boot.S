@@ -17,23 +17,54 @@ _start:
     // only one.
     // In this case we are interested to get the core id and choose on of the core
     // to start the execution (in this case the core with id 0).
+    // https://developer.arm.com/documentation/ddi0500/j/System-Control/AArch64-register-descriptions/Multiprocessor-Affinity-Register?lang=en
     mrs x0, mpidr_el1
-    and x0, x0, #0xFF
-    cbz x0, master
-    b proc_hang
+    and x0, x0, #0x3
+    mov x2, x0 // save the processor id
+    // cbz x0, master
+    cmp x0, #0x0
+    beq init_bss
+    
+    // for all non primary processor, wait for 150 cycles.
+    mov x0, #150
+    bl delay
+    b master
 
 proc_hang:
     b proc_hang
 
-master:
-    // memzero function accepts 2 args, start address of memory and size.
+init_bss:
+    // memzero function accepts 2 ars, start address of memory and size.
     // Note that in arm, the first 7 arguments passed to a function are passed
     // via the registers x0-x6.
     adr x0, bss_begin
     adr x1, bss_end
     sub x1, x1, x0
     bl memzero
+    b master
 
-    mov sp, #LOW_MEMORY
-    bl kernel_main    
+// Requires x0 to have the processor id.
+setup_stack:
 
+
+// The master process is responsible to initialize the resources.
+master:
+    mov x0, x2
+    mov x1, #STACK_SIZE
+    // Compute the right start of the stack for each processor.
+    mul x1, x0, x1 
+    add x1, x1, #LOW_MEMORY
+    mov sp, x1 
+    # Pass processor id stored in x0 to kernel_main.
+    bl kernel_main
+    b proc_hang // should never come here.
+
+
+// https://github.com/s-matyukevich/raspberry-pi-os/issues/8#issuecomment-624115220
+// Requires x0 with mpidr_el1.
+// Requires x1 with starting address.
+wakeup_core:
+    mov x2, 0xd8
+    str x1, [x2, x0, LSL #3]
+    sev
+    ret
