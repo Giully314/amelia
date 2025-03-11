@@ -15,3 +15,11 @@ Modern operating systems by Tanenbaum, Bos
 ## Raspberry pi boot sequence 
 https://raspberrypi.stackexchange.com/questions/10442/what-is-the-boot-sequence  
 https://github.com/DieterReuter/workshop-raspberrypi-64bit-os/blob/master/part1-bootloader.md   
+
+## QEMU 
+With -kernel option, if you pass a .img the kernel will be loaded as a "Linux kernel"
+where https://www.kernel.org/doc/Documentation/arm64/booting.txt must be meet. This 
+also means that only the primary cpu will be started and the multi-core must be 
+enabled by code. If you want to avoid this, pass the .elf kernel and qemu will
+start to execute for all the cpu at the entry point.  
+https://stackoverflow.com/questions/58420670/qemu-bios-vs-kernel-vs-device-loader-file
