@@ -3,7 +3,7 @@ SRC_DIR = src
 BUILD_DIR := build
 
 CC := clang
-CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding -nostdinc 
+CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding  
 CFLAGS += -mcpu=cortex-a53+nosimd
 CFLAGS += -Wall -nostdlib -mgeneral-regs-only -O2
 
@@ -58,7 +58,7 @@ qemu-run: kernel8.img
 qemu-uart-run: kernel8.img
 	qemu-system-aarch64 -M raspi3b -serial stdio -kernel build/kernel8.elf
 
-qemu-clean-run: clean qemu-uart-run
+qemu-clean-run: clean qemu-run
 
 clean:
 	rm -rf $(BUILD_DIR) *.img
