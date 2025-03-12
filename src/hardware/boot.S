@@ -1,9 +1,10 @@
-#include <amelia/memory.h>
 // The kernel is loaded at 0x80000000. This file is placed at that position
 // by the boot.ld script.
 // This file is the first thing that get executed, it setup the stack and 
 // calls start() in the start.c file.
 
+#include <amelia/memory.h>
+#include <amelia/arm/sysregs.h>
 
 .section ".text.boot"
 
@@ -23,33 +24,48 @@ _start:
     mov x2, x0 // save the processor id
     // cbz x0, master
     cmp x0, #0x0
-    beq init_bss
+    beq master
     
     // for all non primary processor, wait for 150 cycles.
-    mov x0, #150
-    bl delay
-    b master
+    // mov x0, #150
+    // bl delay
+    b proc_hang
 
 proc_hang:
     b proc_hang
 
-init_bss:
-    // memzero function accepts 2 ars, start address of memory and size.
-    // Note that in arm, the first 7 arguments passed to a function are passed
-    // via the registers x0-x6.
-    adr x0, bss_begin
-    adr x1, bss_end
-    sub x1, x1, x0
-    bl memzero
-    b master
-
-// Requires x0 to have the processor id.
-setup_stack:
 
 
-// The master process is responsible to initialize the resources.
+// The master process is responsible to initialize the state of the OS such as EL, stack and wake up other cores.
 master:
-    mov x0, x2
+    // Set the system control register (el1). Configure parameters such as cache access, MMU and it 
+    // accessible from >= el1. 
+    // Page 2654 of the ARM v8 manual.
+    ldr x0, =SCTLR_EL1_VALUE_MMU_DISABLED
+    msr sctlr_el1, x0
+
+    // Set the hypervisor configuration register el2.
+    ldr x0, =HCR_EL2_VALUE
+    msr hcr_el2, x0
+
+    ldr x0, =SCR_EL3_VALUE
+    msr scr_el3, x0
+
+    // Set the program status register.
+    ldr x0, =SPSR_EL3_VALUE
+    msr spsr_el3, x0
+
+    // elr_el3 holds the address of the instruction to be executed after eret.
+    adr x0, el1_entry
+    msr elr_el3, x0
+
+    eret
+
+el1_entry:
+    bl init_bss
+
+    mrs x0, mpidr_el1
+    and x0, x0, #0x3
     mov x1, #STACK_SIZE
     // Compute the right start of the stack for each processor.
     mul x1, x0, x1 
@@ -58,6 +74,19 @@ master:
     # Pass processor id stored in x0 to kernel_main.
     bl kernel_main
     b proc_hang // should never come here.
+
+init_bss:
+    // memzero function accepts 2 args, start address of memory and size.
+    adr x0, bss_begin
+    adr x1, bss_end
+    sub x1, x1, x0
+    // Save link register into x3. Stack is not yet initialized.
+    mov x3, lr
+    bl memzero
+    mov lr, x3
+    ret
+    
+
 
 
 // https://github.com/s-matyukevich/raspberry-pi-os/issues/8#issuecomment-624115220
