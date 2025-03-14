@@ -1,8 +1,6 @@
 // amelia/arm/sysregs.h
 // PURPOSE: Define ARM system register configuration values.
 //
-// DESCRIPTION:
-//
 
 #ifndef _AMELIA_ARM_SYSREGS_H
 #define _AMELIA_ARM_SYSREGS_H
@@ -54,15 +52,38 @@
 
 
 // ***********************
+// Saved Program Status Register EL2, Page 383 of AArch64 reference manual.
+// ***********************
+
+// Disable exceptions.
+#define SPSR_EL2_MASK_ALL (7 << 6)
+
+// Use EL1 with its SP. 
+#define SPSR_EL2_EL1h (5 << 0)
+
+#define SPSR_EL2_VALUE (SPSR_EL2_EL1h | SPSR_EL2_MASK_ALL)
+
+// ***********************
 // Saved Program Status Register EL3, Page 389 of AArch64 reference manual.
 // ***********************
 
 // Disable exceptions.
 #define SPSR_EL3_MASK_ALL (7 << 6)
 
-// Use EL1 SP. 
-#define SPSR_EL3_EL1h (5 << 0)
+// Use EL2 with its SP. 
+#define SPSR_EL3_EL1h (9 << 0)
 
 #define SPSR_EL3_VALUE (SPSR_EL3_EL1h | SPSR_EL3_MASK_ALL)
+
+
+
+
+// ***********************
+// CPACR_EL1 controls for SIMD and FP registers, Page 2411 of AArch64 reference manual.
+// ***********************
+
+#define CPACR_EL1_FPEN_ENABLED (3 << 20)
+
+#define CPACR_VALUE (CPACR_EL1_FPEN_ENABLED)
 
 #endif  // _AMELIA_ARM_SYSREGS_H
