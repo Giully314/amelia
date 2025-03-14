@@ -5,6 +5,7 @@ Amelia is an operating system developed for learning purposes.
 ## Articles
 [Raspberry pi os](https://s-matyukevich.github.io/raspberry-pi-os/)  
 [Raspberry pi bare metal](https://github.com/bztsrc/raspi3-tutorial/)  
+[AArch64 Interrupt handling](https://krinkinmu.github.io/2021/01/10/aarch64-interrupt-handling.html)  
 ## Books 
 Structured Computer Organization by Tanenbaum, Austin  
 Computer organization and architecture Design for performance by William Stallings  
@@ -15,6 +16,9 @@ Modern operating systems by Tanenbaum, Bos
 ## Raspberry pi boot sequence 
 https://raspberrypi.stackexchange.com/questions/10442/what-is-the-boot-sequence  
 https://github.com/DieterReuter/workshop-raspberrypi-64bit-os/blob/master/part1-bootloader.md   
+
+## ARM
+[ARM v8 manual](https://developer.arm.com/documentation/ddi0487/ca/)  
 
 ## QEMU 
 With -kernel option, if you pass a .img the kernel will be loaded as a "Linux kernel"
