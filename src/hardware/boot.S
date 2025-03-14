@@ -1,7 +1,16 @@
-// The kernel is loaded at 0x80000000. This file is placed at that position
-// by the boot.ld script.
-// This file is the first thing that get executed, it setup the stack and 
-// calls start() in the start.c file.
+// src/hardware/boot.S
+// DESCRIPTION:
+//  The kernel is loaded at 0x80000000. This file is placed at that position
+//  by the boot.ld script.
+//  The job of this file is to execute initialization steps for the machine like:
+//  1) EL3 -> EL2 -> EL1 setup.
+//  2) Setup bss section.
+//  3) Setup the stack.
+//  4) Call kernel_init defined in start.c.
+//  5) Call kernel_main defined in start.c.
+//  
+//  For now there is only one core active, the rest just hang in a loop.
+//  
 
 #include <amelia/memory.h>
 #include <amelia/arm/sysregs.h>
@@ -22,9 +31,7 @@ _start:
     mrs x0, mpidr_el1
     and x0, x0, #0x3
     mov x2, x0 // save the processor id
-    // cbz x0, master
-    cmp x0, #0x0
-    beq master
+    cbz x0, master
     
     // for all non primary processor, wait for 150 cycles.
     // mov x0, #150
@@ -44,6 +51,11 @@ master:
     ldr x0, =SCTLR_EL1_VALUE_MMU_DISABLED
     msr sctlr_el1, x0
 
+    // Enable simd and fp registers in el1. These registers
+    // are used by the compiler in printf.
+    ldr x0, =CPACR_VALUE
+    msr cpacr_el1, x0
+
     // Set the hypervisor configuration register el2.
     ldr x0, =HCR_EL2_VALUE
     msr hcr_el2, x0
@@ -56,37 +68,66 @@ master:
     msr spsr_el3, x0
 
     // elr_el3 holds the address of the instruction to be executed after eret.
-    adr x0, el1_entry
+    adr x0, el2_entry
     msr elr_el3, x0
 
     eret
 
+// Exercise 2.1.
+// Initialize system resources here.
+el2_entry:
+    // Set the program status register.
+    ldr x0, =SPSR_EL2_VALUE
+    msr spsr_el2, x0
+
+    // elr_el2 holds the address of the instruction to be executed after eret.
+    adr x0, el1_entry
+    msr elr_el2, x0
+
+    eret
+
 el1_entry:
+    bl init_stack
     bl init_bss
 
+    // Load processor id.
+    mrs x0, mpidr_el1
+    and x0, x0, #0x3
+    bl kernel_init
+
+    // reset the stack.
+    bl init_stack
+
+    // Load processor id.
+    mrs x0, mpidr_el1
+    and x0, x0, #0x3
+    
+    // Start kernel main point.
+    bl kernel_main
+    b proc_hang // should never come here.
+
+
+// Setup the stack based on the processor id.
+init_stack:
     mrs x0, mpidr_el1
     and x0, x0, #0x3
     mov x1, #STACK_SIZE
-    // Compute the right start of the stack for each processor.
+    // Compute the right start of the stack for each processor based on the id.
     mul x1, x0, x1 
     add x1, x1, #LOW_MEMORY
-    mov sp, x1 
-    # Pass processor id stored in x0 to kernel_main.
-    bl kernel_main
-    b proc_hang // should never come here.
+    mov sp, x1
+    ret
 
 init_bss:
     // memzero function accepts 2 args, start address of memory and size.
     adr x0, bss_begin
     adr x1, bss_end
     sub x1, x1, x0
-    // Save link register into x3. Stack is not yet initialized.
-    mov x3, lr
+    // Save link register.
+    str lr, [sp, #-16]!
     bl memzero
-    mov lr, x3
+    ldr lr, [sp], #16
     ret
-    
-
 
 
 // https://github.com/s-matyukevich/raspberry-pi-os/issues/8#issuecomment-624115220
