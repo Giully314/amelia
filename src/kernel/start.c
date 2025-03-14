@@ -4,24 +4,33 @@
 #include <amelia/peripherals/uart/mini_uart.h>
 #include <amelia/printf.h>
 #include <amelia/utils.h>
+#include <amelia/peripherals/timer.h>
+#include <amelia/peripherals/irq.h>
+#include <amelia/hardware/exception_entry.h>
 
 void putc(void *p, char c) { 
     mini_uart_send(c);
 }
 
-// Function executed by the master process.
+// Initialize all the resources. This function is executed at EL1.
+void kernel_init(unsigned int processor_id) {
+    mini_uart_init();
+    init_printf(0, putc);
+    irq_init_vector_table();
+    timer_init();
+    irq_enable_interrupt_controller();
+    irq_enable();
+    
+    char id = processor_id + '0'; 
+    printf("Kernel init from processor %c with current EL %u\n", id, get_el());
+}
+
+// Kernel main, executed at EL1.
 void kernel_main(unsigned int processor_id) {
-    if (processor_id == 0) {
-        init_printf(0, putc);
-        mini_uart_init();
-    }
-    char id = processor_id + '0'; // convert to ascii representation.
-    
-    printf("Hello from processor %c with current EL %u\n", id, get_el());
-    
-    if (processor_id == 0) {
-        while (1) {
-    
-        }
+    char id = processor_id + '0'; 
+    printf("Kernel main from processor %c with current EL %u\n", id, get_el());
+
+    while (1) {
+
     }
 }
