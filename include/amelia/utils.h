@@ -8,15 +8,15 @@
 #define _AMELIA_UTILS_H
 
 // Wait for time specified in cycles.
-extern void delay(unsigned long time);
+void delay(unsigned long time);
 
 // Write 32 bits to a device specified by id.
-extern void put32(unsigned long id, unsigned int value);
+void put32(unsigned long id, unsigned int value);
 
 // Read 32 bits from a device specified by id.
-extern unsigned int get32(unsigned long id);
+unsigned int get32(unsigned long id);
 
 // Get the current Expection Level.
-extern unsigned int get_el(); 
+unsigned int get_el(); 
 
 #endif  // _AMELIA_UTILS_H
