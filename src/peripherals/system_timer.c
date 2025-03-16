@@ -1,5 +1,5 @@
 // src/peripherals/timer.c
-#include <amelia/peripherals/timer.h>
+#include <amelia/peripherals/system_timer.h>
 #include <amelia/utils.h>
 #include <amelia/printf.h>
 
