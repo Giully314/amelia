@@ -3,6 +3,9 @@
 #include <amelia/utils.h>
 #include <amelia/printf.h>
 #include <amelia/peripherals/system_timer.h>
+#include <amelia/peripherals/local_timer.h>
+#include <amelia/peripherals/aux.h>
+#include <amelia/peripherals/uart/mini_uart.h>
 
 const char *entry_error_messages[] = {
 	"SYNC_INVALID_EL1t",
@@ -30,6 +33,7 @@ const char *entry_error_messages[] = {
 // Enable the IRQ on core 0.
 void irq_enable_interrupt_controller() {
     put32(IRQ_ENABLE_REG1_CORE0, IRQ_SYSTEM_TIMER_1);
+	// put32(LOCAL_TIMER_CONTROL_STATUS, LOCAL_TIMER_VALUE);
 }
 
 // Handle IRQ.
@@ -38,14 +42,44 @@ void irq_handle() {
     // wrap this in a loop.
     // Also the mechanism is not precise, because we need to
     // extract each bit with an AND to check.
-    unsigned int irq = get32(IRQ_PENDING_REG1);
-    switch (irq) {
-        case (IRQ_SYSTEM_TIMER_1):
-            timer_handle_irq();
-            break;
-        default:
-            printf("Unkwown pending irq: %x\r\n", irq);
-    }
+	// printf("IRQ HANLDE");
+    // switch (irq) {
+		//     case (IRQ_SYSTEM_TIMER_1):
+		//         // timer_handle_irq();
+		//         break;
+		//     default:
+		//         printf("Unkwown pending irq: %x\r\n", irq);
+		// }
+		
+	unsigned int irq = get32(IRQ_PENDING_REG1);
+	if (irq & IRQ_SYSTEM_TIMER_1) {
+		timer_handle_irq();
+		irq &= ~IRQ_SYSTEM_TIMER_1;
+	}
+	else if (irq & (1 << 29)) {
+		mini_uart_handle_irq();
+		irq &= ~(1 << 29);
+	}
+	else if (irq) {
+		printf("Unkwown base pending irq: %x\r\n", irq);
+	}
+
+	// irq = get32(AUX_IRQ);
+	// switch (irq & 1) {
+	// 	case 1:
+	// 		mini_uart_handle_irq();
+	// 		break;
+	// }
+
+	// Check for local interrupts.
+	// irq = get32(CORE0_INTERRUPT_SOURCE);
+	// switch (irq) {
+	// 	case (1 << 11):
+	// 		local_timer_handle_irq();
+	// 		break;
+	// 	default:
+	// 		printf("Unkwown base pending irq: %x\r\n", irq);
+	// }
 }
 
 // Temporary function for dealing with invalid (not supported) exceptions.
