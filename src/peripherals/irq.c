@@ -2,7 +2,7 @@
 #include <amelia/peripherals/irq.h>
 #include <amelia/utils.h>
 #include <amelia/printf.h>
-#include <amelia/peripherals/timer.h>
+#include <amelia/peripherals/system_timer.h>
 
 const char *entry_error_messages[] = {
 	"SYNC_INVALID_EL1t",

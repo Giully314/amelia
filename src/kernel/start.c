@@ -4,7 +4,7 @@
 #include <amelia/peripherals/uart/mini_uart.h>
 #include <amelia/printf.h>
 #include <amelia/utils.h>
-#include <amelia/peripherals/timer.h>
+#include <amelia/peripherals/system_timer.h>
 #include <amelia/peripherals/irq.h>
 #include <amelia/hardware/exception_entry.h>
 
