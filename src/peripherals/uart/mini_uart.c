@@ -3,6 +3,7 @@
 #include <amelia/peripherals/gpio.h>
 #include <amelia/peripherals/aux.h>
 #include <amelia/utils.h>
+#include <amelia/printf.h>
 
 void mini_uart_init() {
     unsigned int selector;
@@ -36,7 +37,7 @@ void mini_uart_init() {
     put32(AUX_ENABLES, 1); // Enable mini uart (enable register access).
     put32(AUX_MU_CNTL_REG, 0); // Disable auto cflow control and disable receiver and transmitter for initialization.
     put32(AUX_MU_IER_REG, 0); // Disable receive and transmit interrupts (temporary).
-    put32(AUX_MU_LCR_REG, 3); // Enable 8 bit mode.
+    put32(AUX_MU_LCR_REG, 0b10000011); // Enable 8 bit mode and disable DLAB.
     put32(AUX_MU_MCR_REG, 0); // Set RTS line to be always high.
     put32(AUX_MU_BAUD_REG, baudrate_reg); // Set baud rate register value (270 corresponds to 115200 bits/s, check manual for the computation)
     put32(AUX_MU_CNTL_REG, 3); // Enable transmitter and receiver.
@@ -61,4 +62,17 @@ void mini_uart_send_string(const char* msg) {
     for (int i = 0; msg[i] != '\0'; ++i) {
         mini_uart_send(msg[i]);
     }
+}
+
+void mini_uart_enable_irq() {
+    put32(AUX_MU_IER_REG, 0b1110);
+}
+
+void mini_uart_disable_irq() {
+    put32(AUX_MU_IER_REG, 0xffffff00);
+}
+
+void mini_uart_handle_irq() {
+    // char c = mini_uart_recv();
+    printf("Some data are being sent.\r\n");
 }

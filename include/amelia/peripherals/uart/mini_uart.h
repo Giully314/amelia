@@ -14,6 +14,13 @@
 // Initialize UART section.
 void mini_uart_init();
 
+// Enable interrupts (transmit and receive) for mini uart.
+void mini_uart_enable_irq();
+
+// Disable interrupts for mini uart.
+void mini_uart_disable_irq();
+
+void mini_uart_handle_irq();
 
 // Send a byte.
 void mini_uart_send(char c);
