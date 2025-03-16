@@ -18,11 +18,14 @@
 #include <amelia/peripherals/peripherals_base.h>
 
 // Register for current pending interrupts.
+#define IRQ_BASIC_PENDING_REG (PERIPHERALS_IRQ_START + 0x200)
 #define IRQ_PENDING_REG1 (PERIPHERALS_IRQ_START + 0x204)
 #define IRQ_PENDING_REG2 (PERIPHERALS_IRQ_START + 0x208)
 
 #define IRQ_ENABLE_REG1_CORE0 (PERIPHERALS_IRQ_START + 0x210)
 #define IRQ_ENABLE_REG2_CORE0 (PERIPHERALS_IRQ_START + 0x214)
+// Local interrupts.
+#define IRQ_ENABLE_BASIC_CORE0 (PERIPHERALS_IRQ_START + 0x218)
 
 
 #define IRQ_SYSTEM_TIMER_0 (1 << 0)
