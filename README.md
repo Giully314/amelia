@@ -17,7 +17,9 @@ Modern operating systems by Tanenbaum, Bos
 https://raspberrypi.stackexchange.com/questions/10442/what-is-the-boot-sequence  
 https://github.com/DieterReuter/workshop-raspberrypi-64bit-os/blob/master/part1-bootloader.md   
 
-## ARM
+## Manuals
+[bcm2837 manual](https://cs140e.sergio.bz/docs/BCM2837-ARM-Peripherals.pdf)
+[bcm2836 peripherals](https://datasheets.raspberrypi.com/bcm2836/bcm2836-peripherals.pdf)
 [ARM v8 manual](https://developer.arm.com/documentation/ddi0487/ca/)  
 
 ## QEMU 
