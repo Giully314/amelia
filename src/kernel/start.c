@@ -7,6 +7,7 @@
 #include <amelia/peripherals/system_timer.h>
 #include <amelia/peripherals/irq.h>
 #include <amelia/hardware/exception_entry.h>
+#include <amelia/peripherals/local_timer.h>
 
 void putc(void *p, char c) { 
     mini_uart_send(c);
@@ -18,6 +19,8 @@ void kernel_init(unsigned int processor_id) {
     init_printf(0, putc);
     irq_init_vector_table();
     timer_init();
+    // local_timer_init();
+    mini_uart_enable_irq();
     irq_enable_interrupt_controller();
     irq_enable();
     
@@ -31,6 +34,6 @@ void kernel_main(unsigned int processor_id) {
     printf("Kernel main from processor %c with current EL %u\n", id, get_el());
 
     while (1) {
-
+        printf("%c", mini_uart_recv());
     }
 }
