@@ -4,9 +4,9 @@
 #include <amelia/printf.h>
 
 // Set the interrupt interval.
-const unsigned int interval = 200000;
+static const unsigned int interval = 500000;
 
-unsigned int current_value = 0;
+static unsigned int current_value = 0;
 
 // Initialize the timer by setting one of the compare register for 
 // interrupt detection.
