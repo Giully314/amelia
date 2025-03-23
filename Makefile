@@ -13,7 +13,8 @@ LDFLAGS := -T $(LINKER_SCRIPT) -m aarch64elf -nostdlib
 
 HD := $(SRC_DIR)/hardware
 PERIPHERALS_DIR := $(SRC_DIR)/peripherals
-UART_DIR := $(SRC_DIR)/peripherals/uart
+UART_DIR := $(PERIPHERALS_DIR)/uart
+TIMER_DIR := $(PERIPHERALS_DIR)/timer
 K := $(SRC_DIR)/kernel
 
 $(info Running makefile)
@@ -23,10 +24,12 @@ C_FILES += $(wildcard $(PERIPHERALS_DIR)/*.c)
 C_FILES += $(wildcard $(HD)/*.c)
 C_FILES += $(wildcard $(K)/*.c)
 C_FILES += $(wildcard $(UART_DIR)/*.c)
+C_FILES += $(wildcard $(TIMER_DIR)/*.c)
 
 ASM_FILES = $(wildcard $(SRC_DIR)/*.S)
 ASM_FILES += $(wildcard $(PERIPHERALS_DIR)/*.S)
 ASM_FILES += $(wildcard $(UART_DIR)/*.S)
+ASM_FILES += $(wildcard $(TIMER_DIR)/*.S)
 ASM_FILES += $(wildcard $(K)/*.S)
 ASM_FILES += $(wildcard $(HD)/*.S)
 
@@ -60,6 +63,7 @@ kernel8.img: $(LINKER_SCRIPT) $(OBJ_FILES)
 qemu-debug-run: kernel8.img
 	qemu-system-aarch64 -M raspi3b -d trace:bcm2835_systmr* -serial null -serial stdio -kernel build/kernel8.elf
 
+# -serial pty for another terminal
 qemu-run: kernel8.img
 	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -kernel build/kernel8.elf
 
