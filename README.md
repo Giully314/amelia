@@ -1,5 +1,6 @@
 # Intro
-Amelia is an operating system developed for learning purposes.
+Amelia is an operating system developed for learning purposes.  
+For more informations about the design and implementation, check the `doc` directory.
 
 # Resources
 ## Articles
