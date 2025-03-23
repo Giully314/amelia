@@ -8,3 +8,8 @@ interrupts comes from outside. The interrupt controller handles which core
 should receive  a specific interrupt from the global ones; can also 
 send interrupts between cores (mailboxes) and control the local timer and
 the performance monitors interrupts (PMU). 
+By default the global interrupts are sent to the first PE.  
+The design of interrupts in `amelia` is the following: each peripheral that support
+interrupts have 3 functions for enabling, disabling and handling the interrupt.  
+Through the `irq.h` and `irq_regs.h` files we can enable the corresponding interrupt
+via the global controller hardware.  
