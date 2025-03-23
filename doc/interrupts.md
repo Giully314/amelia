@@ -13,3 +13,7 @@ The design of interrupts in `amelia` is the following: each peripheral that supp
 interrupts have 3 functions for enabling, disabling and handling the interrupt.  
 Through the `irq.h` and `irq_regs.h` files we can enable the corresponding interrupt
 via the global controller hardware.  
+
+## Resources
+Interrupt handling: https://krinkinmu.github.io/2021/01/10/aarch64-interrupt-handling.html  
+Arm general handling of interrupts: https://developer.arm.com/documentation/ihi0048/a/Interrupt-Handling-and-Prioritization/General-handling-of-interrupts  
