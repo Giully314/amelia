@@ -28,3 +28,18 @@ get_el:
     mrs x0, CurrentEL
     lsr x0, x0, #2
     ret 
+
+.global set32
+set32:
+    ldr w2, [x0]
+    orr w2, w1, w2
+    str w2, [x0]
+    ret
+
+.global clear32
+clear32:
+    ldr w2, [x0]
+    mvn w1, w1
+    and w2, w1, w2
+    str w2, [x0]
+    ret

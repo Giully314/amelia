@@ -6,11 +6,11 @@
 //
 // DESCRIPTION:
 //
-#ifndef AMELIA_HARDWARE_CPU_H
-#define AMELIA_HARDWARE_CPU_H
+#ifndef _AMELIA_HARDWARE_CPU_H
+#define _AMELIA_HARDWARE_CPU_H
 
 struct Context {};
 
 struct CPU {};
 
-#endif
+#endif // _AMELIA_HARDWARE_CPU_H

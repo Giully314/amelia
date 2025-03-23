@@ -1,49 +1,38 @@
 // amelia/peripherals/irq.h
-// PURPOSE: Define bit value for enabling/disabling interrupts.
-// 
+// PURPOSE: Define API for interrupts.
+//
 // DESCRIPTION:
-//  For now we work only with IRQ, that's why in irq.S we set 2 as a value for 
-//  the DAIF register. 
+//  For now we work only with IRQ, that's why in irq.S we set 2 as a value for
+//  the DAIF register.
 //  D (bit 9): debug exception masked if set to 1.
 //  A (bit 8): SError exception masked if set to 1.
 //  I (bit 7): IRQ exception masked if set to 1.
 //  F (bit 6): FIQ exception masked if set to 1.
 //  Using daifclr and daifset we can clear/set directly the bits using values
 //  for the first 4 bits. Set is used for masking the exceptions.
-//  
+//  Masking an interrupt means that the interrupt is ignored by the CPU.
+//
 
 #ifndef _AMELIA_PERIPHERALS_IRQ_H
 #define _AMELIA_PERIPHERALS_IRQ_H
 
-#include <amelia/peripherals/peripherals_base.h>
+#include <amelia/basic_types.h>
 
-// Register for current pending interrupts.
-#define IRQ_BASIC_PENDING_REG (PERIPHERALS_IRQ_START + 0x200)
-#define IRQ_PENDING_REG1 (PERIPHERALS_IRQ_START + 0x204)
-#define IRQ_PENDING_REG2 (PERIPHERALS_IRQ_START + 0x208)
-
-#define IRQ_ENABLE_REG1_CORE0 (PERIPHERALS_IRQ_START + 0x210)
-#define IRQ_ENABLE_REG2_CORE0 (PERIPHERALS_IRQ_START + 0x214)
-// Local interrupts.
-#define IRQ_ENABLE_BASIC_CORE0 (PERIPHERALS_IRQ_START + 0x218)
-
-
-#define IRQ_SYSTEM_TIMER_0 (1 << 0)
-#define IRQ_SYSTEM_TIMER_1 (1 << 1)
-#define IRQ_SYSTEM_TIMER_2 (1 << 2)
-#define IRQ_SYSTEM_TIMER_3 (1 << 3)
-
-#ifndef __ASSEMBLER__ 
-
-
+// Set the address of the vector table.
 void irq_init_vector_table();
 
+// Enable interrupts by clearing the mask.
 void irq_enable();
+
+// Disable the interrupt by setting the mask.
 void irq_disable();
 
-void irq_enable_interrupt_controller();
+// Enable global interrupt controller.
+// irq_to_enable is a value where a bit is set to 1 if the corresponding
+// interrupt must be enabled.
+void irq_enable_interrupt_controller(u32 irq_to_enable);
 
-
-#endif 
+// Enable all supported interrupts.
+void irq_enable_all_interrupts();
 
 #endif // _AMELIA_PERIPHERALS_IRQ_H

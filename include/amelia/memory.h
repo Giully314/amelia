@@ -24,4 +24,4 @@ void memzero(unsigned long src, unsigned long num_bytes);
 
 #endif
 
-#endif  // _AMELIA_MEMORY_H
+#endif // _AMELIA_MEMORY_H
