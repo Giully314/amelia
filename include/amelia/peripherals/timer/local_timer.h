@@ -2,7 +2,7 @@
 // PURPOSE: Define API for the ARM (local) timer.
 //
 // DESCRIPTION:
-//\
+//
 
 #ifndef _AMELIA_PERIPHERALS_LOCAL_TIMER_H
 #define _AMELIA_PERIPHERALS_LOCAL_TIMER_H
