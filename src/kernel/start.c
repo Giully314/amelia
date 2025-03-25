@@ -28,7 +28,7 @@ void kernel_init(unsigned int processor_id)
 	mini_uart_enable_irq();
 	local_timer_enable_irq();
 
-	irq_enable_interrupt_controller(IRQ_SYSTEM_TIMER_1);
+	// irq_enable_interrupt_controller(IRQ_SYSTEM_TIMER_1);
 	irq_enable();
 
 	char id = processor_id + '0';

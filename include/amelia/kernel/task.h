@@ -1,42 +1,39 @@
-// amelia/kernel/process.h
-// PURPOSE: Define the structs for information about a process.
+// amelia/kernel/task.h
+// PURPOSE: Define information for a task.
 //
 // STRUCTS:
 //  ProcessInfo:
 //
 // DESCRIPTION:
+//	A task is a program that is executed by the CPU. In this context the difference
+//	between process and thread is not relevant.
 //
-#ifndef AMELIA_KERNEL_PROCESS_H
-#define AMELIA_KERNEL_PROCESS_H
 
-#include <stdint.h>
+#ifndef _AMELIA_KERNEL_TASK_H
+#define _AMELIA_KERNEL_TASK_H
 
-typedef enum ThreadState {
-	READY, // The thread is ready to run.
-	RUNNING, // The thread is running.
-	BLOCKED, // The thread is in a blocked state.
-} ExecutionState;
+#include <amelia/basic_types.h>
+#include <amelia/hardware/cpu.h>
 
-// Represent a thread of execution.
-typedef struct Thread {
-	int32_t id;
-	// Program counter, registers, stack, state
-} Thread;
+typedef enum TaskState {
+	TASK_READY, // The thread is ready to run.
+	TASK_RUNNING, // The thread is running.
+	TASK_BLOCKED, // The thread is in a blocked state.
+} TaskState;
 
-// Save the state of a running process.
-typedef struct ProcessInfo {
-	int32_t id;
+typedef struct Task {
+	struct CPUContext cpu_context;
+	enum TaskState state;
 
-	Thread *threads;
+	// How many ticks the task should run.
+	u32 counter;
 
-	// Address space.
+	// This is copied to counter. It signals how much a task must run
+	// based on its priority.
+	u32 priority;
 
-	// Info related to process management.
+	// Non-zero value means the task cannot be preempted.
+	u32 preempt_count;
+} Task;
 
-	// Info related to memory.
-
-	// Info related to files.
-
-} ProcessInfo;
-
-#endif
+#endif // AMELIA_KERNEL_TASK_H
