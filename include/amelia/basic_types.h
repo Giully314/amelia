@@ -21,4 +21,7 @@ typedef uint64_t u64;
 
 typedef char byte;
 
+// Holds a memory address.
+typedef u64 ptr_t;
+
 #endif // _AMELIA_BASIC_TYPES_H
