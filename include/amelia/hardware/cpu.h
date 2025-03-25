@@ -1,16 +1,34 @@
 // amelia/hardware/cpu.h
-// PURPOSE: Define the informations about a cpu.
+// PURPOSE: Define data related to a CPU.
 //
 // STRUCTS:
-//
+//  CPUContext: Save register data for a context switch.
 //
 // DESCRIPTION:
 //
 #ifndef _AMELIA_HARDWARE_CPU_H
 #define _AMELIA_HARDWARE_CPU_H
 
-struct Context {};
+#include <amelia/basic_types.h>
 
-struct CPU {};
+// Save the register content for a context switch.
+// Because the context switch is done by calling a function, the ARM procedure
+// call convention says that it is responsability of the caller to save the other
+// registers not mentioned in this struct.
+struct CPUContext {
+	u64 x19;
+	u64 x20;
+	u64 x21;
+	u64 x22;
+	u64 x23;
+	u64 x24;
+	u64 x25;
+	u64 x26;
+	u64 x27;
+	u64 x28;
+	u64 fp;
+	u64 sp;
+	u64 pc;
+};
 
 #endif // _AMELIA_HARDWARE_CPU_H
