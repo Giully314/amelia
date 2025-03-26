@@ -1,4 +1,5 @@
 // src/peripherals/timer/system_timer.c
+#include <amelia/kernel/scheduler.h>
 #include <amelia/peripherals/timer/system_timer.h>
 #include <amelia/peripherals/timer/system_timer_regs.h>
 #include <amelia/printf.h>
@@ -26,4 +27,5 @@ void system_timer_handle_irq()
 	put32(SYSTEM_TIMER_C1, current_value);
 	put32(SYSTEM_TIMER_CS, SYSTEM_TIMER_CS_M1);
 	printf("Timer interrupt received\r\n");
+	scheduler_timer_tick();
 }

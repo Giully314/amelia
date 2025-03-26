@@ -7,6 +7,10 @@
 #ifndef _AMELIA_KERNEL_SCHEDULER_H
 #define _AMELIA_KERNEL_SCHEDULER_H
 
+#define THREAD_CPU_CONTEXT 0
+
+#ifndef __ASSEMBLER__
+
 #include <amelia/basic_types.h>
 #include <amelia/kernel/task.h>
 
@@ -40,6 +44,8 @@ void scheduler_switch_to(struct Task *next);
 
 void scheduler_cpu_switch_to(struct Task *prev, struct Task *next);
 
+void ret_from_fork();
+
 // clang-format off
 #define INIT_TASK \
 /*cpu_context*/	{ {0,0,0,0,0,0,0,0,0,0,0,0,0}, \
@@ -47,4 +53,5 @@ void scheduler_cpu_switch_to(struct Task *prev, struct Task *next);
 }
 // clang-format on
 
+#endif // __ASSEMBLER__
 #endif // _AMELIA_KERNEL_SCHEDULER_H

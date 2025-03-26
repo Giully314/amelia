@@ -35,6 +35,8 @@ static void irq_handle_local()
 	case LOCAL_TIMER_IRQ:
 		local_timer_handle_irq();
 		break;
+	case 0:
+		break;
 	default:
 		printf("Unkwown base pending irq: %x\r\n", irq);
 	}

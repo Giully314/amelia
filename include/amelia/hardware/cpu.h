@@ -26,8 +26,8 @@ struct CPUContext {
 	u64 x26;
 	u64 x27;
 	u64 x28;
-	u64 fp;
-	u64 sp;
+	u64 fp; // x29
+	u64 sp; // x9
 	u64 pc;
 };
 

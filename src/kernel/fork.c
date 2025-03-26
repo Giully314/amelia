@@ -4,15 +4,14 @@
 #include <amelia/kernel/scheduler.h>
 #include <amelia/kernel/task.h>
 #include <amelia/memory.h>
+#include <amelia/printf.h>
 
 i32 start_process(ptr_t function, ptr_t arg)
 {
 	// This function cannot be interrupted, so we need
 	// to disable preempting.
 	scheduler_preempt_disable();
-	struct Task *t;
-
-	t = memory_get_free_page();
+	struct Task *t = (struct Task *)memory_get_free_page();
 	if (!t) {
 		return 1;
 	}
@@ -25,8 +24,11 @@ i32 start_process(ptr_t function, ptr_t arg)
 
 	t->cpu_context.x19 = function;
 	t->cpu_context.x20 = arg;
-	t->cpu_context.pc = ret_from_fork;
-	t->cpu_context.sp = t + THREAD_SIZE;
+	t->cpu_context.pc = (u64)ret_from_fork;
+
+	// At the base of the memory, we save the task information.
+	// The stack starts after the Task struct.
+	t->cpu_context.sp = (u64)(t + THREAD_SIZE);
 
 	i32 pid = size_tasks++;
 	tasks[pid] = t;

@@ -16,8 +16,8 @@
 #include <amelia/hardware/cpu.h>
 
 typedef enum TaskState {
-	TASK_READY, // The thread is ready to run.
 	TASK_RUNNING, // The thread is running.
+	TASK_READY, // The thread is ready to run.
 	TASK_BLOCKED, // The thread is in a blocked state.
 } TaskState;
 
@@ -26,14 +26,16 @@ typedef struct Task {
 	enum TaskState state;
 
 	// How many ticks the task should run.
-	u32 counter;
+	i32 counter;
 
 	// This is copied to counter. It signals how much a task must run
 	// based on its priority.
-	u32 priority;
+	i32 priority;
 
 	// Non-zero value means the task cannot be preempted.
-	u32 preempt_count;
+	// TODO: change this to a bool value, to avoid problems in case
+	// we increment 2 consecutive times this value through scheduler_preempt_enable().
+	i32 preempt_count;
 } Task;
 
 #endif // AMELIA_KERNEL_TASK_H
