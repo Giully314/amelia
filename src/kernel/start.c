@@ -62,7 +62,7 @@ void kernel_main(unsigned int processor_id)
 	printf("Kernel main from processor %c with current EL %u\n", id,
 	       get_el());
 
-	i32 res = start_process((u64)&process, (u64) "12345");
+	i32 res = start_process_with_priority((u64)&process, (u64) "12345", 2);
 	if (res != 0) {
 		printf("error while starting process 1");
 		return;

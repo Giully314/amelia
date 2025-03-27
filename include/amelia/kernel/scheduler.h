@@ -49,7 +49,7 @@ void ret_from_fork();
 // clang-format off
 #define INIT_TASK \
 /*cpu_context*/	{ {0,0,0,0,0,0,0,0,0,0,0,0,0}, \
-/* state etc */	0,0,1, 0 \
+/* state etc */	TASK_RUNNING,0,1,1,0 \
 }
 // clang-format on
 

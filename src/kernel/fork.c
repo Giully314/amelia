@@ -6,7 +6,7 @@
 #include <amelia/memory.h>
 #include <amelia/printf.h>
 
-i32 start_process(ptr_t function, ptr_t arg)
+i32 start_process_with_priority(ptr_t function, ptr_t arg, i32 priority)
 {
 	// This function cannot be interrupted, so we need
 	// to disable preempting.
@@ -16,9 +16,10 @@ i32 start_process(ptr_t function, ptr_t arg)
 		return 1;
 	}
 
-	t->priority = current_task->priority;
+	t->priority = priority;
+	t->current_priority = priority;
 	t->state = TASK_RUNNING;
-	t->counter = t->priority;
+	t->counter = t->current_priority;
 	// Disable preemption.
 	t->preempt_count = 1;
 
@@ -35,4 +36,9 @@ i32 start_process(ptr_t function, ptr_t arg)
 	scheduler_preempt_enable();
 
 	return 0;
+}
+
+
+i32 start_process(ptr_t function, ptr_t arg) {
+	return start_process_with_priority(function, arg, current_task->priority);
 }

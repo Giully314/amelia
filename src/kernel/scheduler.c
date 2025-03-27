@@ -87,6 +87,7 @@ void scheduler_timer_tick()
 	}
 
 	current_task->counter = 0;
+	
 	irq_enable();
 	_schedule();
 	irq_disable();

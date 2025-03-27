@@ -28,9 +28,16 @@ typedef struct Task {
 	// How many ticks the task should run.
 	i32 counter;
 
+	// Priority assigned at task creation. This number is used for comparison
+	// with other tasks for priority execution.
+	i32 priority;
+	
+	// Current priority of the task. This number is based on the priority
+	// field but it is modiefied by the scheduler for reassessing the process
+	// priority to avoid cpu monopoly.
 	// This is copied to counter. It signals how much a task must run
 	// based on its priority.
-	i32 priority;
+	i32 current_priority;	
 
 	// Non-zero value means the task cannot be preempted.
 	// TODO: change this to a bool value, to avoid problems in case
