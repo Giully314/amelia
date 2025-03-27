@@ -26,6 +26,17 @@ struct CPUContext {
 	u64 x26;
 	u64 x27;
 	u64 x28;
+
+	// Floating point registers (64 bit version)
+	u64 d8;
+	u64 d9;
+	u64 d10;
+	u64 d11;
+	u64 d12;
+	u64 d13;
+	u64 d14;
+	u64 d15;
+	
 	u64 fp; // x29
 	u64 sp; // x9
 	u64 pc;
