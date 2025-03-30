@@ -14,10 +14,10 @@ struct MemoryBlock memory_get_page()
 			mem_map[i] = 1;
             ptr_t start = (LOW_MEMORY + i * PAGE_SIZE);
 			return (struct MemoryBlock){.start=start, 
-                .end=(start + PAGE_SIZE)};
+                .size=PAGE_SIZE};
 		}
 	}
-	return (struct MemoryBlock){.start=0, .end=0};
+	return (struct MemoryBlock){.start=0, .start=0};
 }
 
 void memory_free_page(ptr_t p)
