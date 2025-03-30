@@ -20,7 +20,7 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-typedef char byte;
+typedef u8 byte;
 
 // Holds a memory address.
 typedef u64 ptr_t;
