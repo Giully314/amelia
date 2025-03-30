@@ -5,13 +5,15 @@
 #include <amelia/kernel/task.h>
 #include <amelia/memory.h>
 #include <amelia/printf.h>
+#include <amelia/memory/page_allocator.h>
 
 i32 start_process_with_priority(ptr_t function, ptr_t arg, i32 priority)
 {
 	// This function cannot be interrupted, so we need
 	// to disable preempting.
 	scheduler_preempt_disable();
-	struct Task *t = (struct Task *)memory_get_free_page();
+	struct MemoryBlock block = memory_get_page();
+	struct Task *t = (struct Task *)block.start;
 	if (!t) {
 		return 1;
 	}

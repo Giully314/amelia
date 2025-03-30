@@ -38,14 +38,6 @@
 
 void memzero(u64 src, u64 num_bytes);
 
-// Get a free page of memory from the allocator.
-// If no page is available return 0, otherwise return the memory
-// address of the start of the page.
-ptr_t memory_get_free_page();
-
-// Release a page of memory.
-void memory_free_page(ptr_t p);
-
 #endif
 
 #endif // _AMELIA_MEMORY_H
