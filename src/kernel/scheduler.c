@@ -70,7 +70,7 @@ void scheduler_init()
 	tasks[0] = &init_task;
 	size_tasks = 1;
 	for (u32 i = 1; i < MAX_NUMBER_OF_TASKS; ++i) {
-		tasks[i] = NULL;
+		tasks[i] = nullptr;
 	}
 }
 
