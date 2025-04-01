@@ -5,7 +5,7 @@ BUILD_DIR := build
 CC := clang
 CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding  
 CFLAGS += -mcpu=cortex-a53+nosimd
-CFLAGS += -Wall -nostdlib -O2
+CFLAGS += -Wall -nostdlib -O2 -std=c23
 
 LINKER_SCRIPT := src/kernel.ld
 LD = ld.lld
@@ -16,6 +16,7 @@ PERIPHERALS_DIR := $(SRC_DIR)/peripherals
 UART_DIR := $(PERIPHERALS_DIR)/uart
 TIMER_DIR := $(PERIPHERALS_DIR)/timer
 K := $(SRC_DIR)/kernel
+MEMORY_DIR = $(SRC_DIR)/memory
 
 $(info Running makefile)
 
@@ -25,6 +26,7 @@ C_FILES += $(wildcard $(HD)/*.c)
 C_FILES += $(wildcard $(K)/*.c)
 C_FILES += $(wildcard $(UART_DIR)/*.c)
 C_FILES += $(wildcard $(TIMER_DIR)/*.c)
+C_FILES += $(wildcard $(MEMORY_DIR)/*.c)
 
 ASM_FILES = $(wildcard $(SRC_DIR)/*.S)
 ASM_FILES += $(wildcard $(PERIPHERALS_DIR)/*.S)
@@ -32,6 +34,7 @@ ASM_FILES += $(wildcard $(UART_DIR)/*.S)
 ASM_FILES += $(wildcard $(TIMER_DIR)/*.S)
 ASM_FILES += $(wildcard $(K)/*.S)
 ASM_FILES += $(wildcard $(HD)/*.S)
+ASM_FILES += $(wildcard $(MEMORY_DIR)/*.S)
 
 
 OBJ_FILES = $(C_FILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%_c.o)
