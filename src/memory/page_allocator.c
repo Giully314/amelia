@@ -12,15 +12,15 @@ struct MemoryBlock memory_get_page()
 	for (u32 i = 0; i < PAGING_PAGES; ++i) {
 		if (mem_map[i] == 0) {
 			mem_map[i] = 1;
-            ptr_t start = (LOW_MEMORY + i * PAGE_SIZE);
+            void* start = (void*)(LOW_MEMORY + i * PAGE_SIZE);
 			return (struct MemoryBlock){.start=start, 
                 .size=PAGE_SIZE};
 		}
 	}
-	return (struct MemoryBlock){.start=0, .start=0};
+	return MEMORY_BLOCK_NULL;
 }
 
-void memory_free_page(ptr_t p)
+void memory_free_page(void *p)
 {
-	mem_map[(p - LOW_MEMORY) / PAGE_SIZE] = 0;
+	mem_map[((ptr_t)p - LOW_MEMORY) / PAGE_SIZE] = 0;
 }

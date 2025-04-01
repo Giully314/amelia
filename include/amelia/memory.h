@@ -36,7 +36,9 @@
 
 #include <amelia/basic_types.h>
 
-void memzero(u64 src, u64 num_bytes);
+void memzero(ptr_t src, u64 num_bytes);
+
+void* memory_align(void *p, u64 alignment);
 
 #endif
 

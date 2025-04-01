@@ -17,7 +17,7 @@
 struct MemoryBlock memory_get_page();
 
 // Release a page of memory.
-void memory_free_page(ptr_t p);
+void memory_free_page(void *p);
 
 
 #endif // _AMELIA_MEMORY_PAGE_ALLOCATOR_H

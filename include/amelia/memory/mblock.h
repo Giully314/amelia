@@ -14,12 +14,12 @@
 #include <amelia/basic_types.h>
 
 struct MemoryBlock {
-    ptr_t start;
+    void* start;
     u64 size;
 };
 
 // A null memory block has size=0.
-#define MEMORY_BLOCK_NULL (MemoryBlock){.start=0, .size=0}
+#define MEMORY_BLOCK_NULL (struct MemoryBlock){.start=nullptr, .size=0}
 
 #endif // _AMELIA_MEMORY_MBLOCK_H
 
