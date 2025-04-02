@@ -7,11 +7,11 @@
 #include <amelia/basic_types.h>
 
 
-inline i64 min(i64 a, i64 b) {
+static inline i64 min(i64 a, i64 b) {
     return a < b ? a : b;
 }
 
-inline i64 max(i64 a, i64 b) {
+static inline i64 max(i64 a, i64 b) {
     return a > b ? a : b;
 }
 
