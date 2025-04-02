@@ -1,7 +1,7 @@
 // src/memory/pool_allocator.c
 #include <amelia/memory/pool_allocator.h>
 #include <amelia/memory.h>
-#include <amelia/minmax.h>
+#include <amelia/algorithms/minmax.h>
 #include <amelia/printf.h>
 
 
