@@ -17,6 +17,8 @@ UART_DIR := $(PERIPHERALS_DIR)/uart
 TIMER_DIR := $(PERIPHERALS_DIR)/timer
 K := $(SRC_DIR)/kernel
 MEMORY_DIR = $(SRC_DIR)/memory
+DS_DIR = $(SRC_DIR)/ds
+ALGORITHMS_DIR = $(SRC_DIR)/algorithms
 
 $(info Running makefile)
 
@@ -27,6 +29,8 @@ C_FILES += $(wildcard $(K)/*.c)
 C_FILES += $(wildcard $(UART_DIR)/*.c)
 C_FILES += $(wildcard $(TIMER_DIR)/*.c)
 C_FILES += $(wildcard $(MEMORY_DIR)/*.c)
+C_FILES += $(wildcard $(DS_DIR)/*.c)
+C_FILES += $(wildcard $(ALGORITHMS_DIR)/*.c)
 
 ASM_FILES = $(wildcard $(SRC_DIR)/*.S)
 ASM_FILES += $(wildcard $(PERIPHERALS_DIR)/*.S)
@@ -35,6 +39,8 @@ ASM_FILES += $(wildcard $(TIMER_DIR)/*.S)
 ASM_FILES += $(wildcard $(K)/*.S)
 ASM_FILES += $(wildcard $(HD)/*.S)
 ASM_FILES += $(wildcard $(MEMORY_DIR)/*.S)
+ASM_FILES += $(wildcard $(DS_DIR)/*.S)
+ASM_FILES += $(wildcard $(ALGORITHMS_DIR)/*.S)
 
 
 OBJ_FILES = $(C_FILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%_c.o)
