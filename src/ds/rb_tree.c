@@ -13,18 +13,33 @@
 //      same number of black nodes.
 //  
 #include <amelia/ds/rb_tree.h>
+#include <amelia/printf.h>
 
+struct RBNode empty_node = {
+    .parent=&empty_node,
+    .left=&empty_node,
+    .right=&empty_node,
+    .data=nullptr,
+    .key=-1,
+    .color=RB_BLACK
+};
+
+#define RB_NULL_NODE (&empty_node)
+
+void rb_tree_init(struct RBTree *tree) {
+    tree->root = RB_NULL_NODE;
+}
 
 static void left_rotate(struct RBTree *tree, struct RBNode *node) {
     struct RBNode *y = node->right;
     node->right = y->left;
     
-    if (y->left != nullptr) {
+    if (y->left != RB_NULL_NODE) {
         y->left->parent = node;
     }
     
     y->parent = node->parent;
-    if (y->parent == nullptr) {
+    if (node->parent == RB_NULL_NODE) {
         tree->root = y;
     } else if (node->parent->left == node) { // Check if node is left child.
         node->parent->left = y;
@@ -40,12 +55,12 @@ static void right_rotate(struct RBTree *tree, struct RBNode *node) {
     struct RBNode *y = node->left;
     node->left = y->right;
     
-    if (y->right != nullptr) {
+    if (y->right != RB_NULL_NODE) {
         y->right->parent = node;
     }
     
     y->parent = node->parent;
-    if (y->parent == nullptr) {
+    if (node->parent == RB_NULL_NODE) {
         tree->root = y;
     } else if (node->parent->left == node) { // Check if node is left child.
         node->parent->left = y;
@@ -108,9 +123,9 @@ static struct RBNode* create_node(struct RBTree *tree, const rb_key_t key, void 
     struct RBNode* node = (struct RBNode*)pool_allocator_get(tree->alloc);
     node->data = data;
     node->key = key;
-    node->parent = nullptr;
-    node->right = nullptr;
-    node->left = nullptr;
+    node->parent = RB_NULL_NODE;
+    node->right = RB_NULL_NODE;
+    node->left = RB_NULL_NODE;
     node->color = RB_RED;
 
     return node;
@@ -118,10 +133,10 @@ static struct RBNode* create_node(struct RBTree *tree, const rb_key_t key, void 
 
 void rb_tree_insert(struct RBTree *tree, const rb_key_t key, void *data) {
     struct RBNode *x = tree->root;
-    struct RBNode *y = nullptr;
+    struct RBNode *y = RB_NULL_NODE;
     struct RBNode *node_to_insert = create_node(tree, key, data);
     
-    while (x != nullptr) {
+    while (x != RB_NULL_NODE) {
         y = x;
         if (tree->cmp(node_to_insert->key, x->key)) {
             x = x->left;
@@ -129,23 +144,21 @@ void rb_tree_insert(struct RBTree *tree, const rb_key_t key, void *data) {
             x = x->right;
         }
     }
-    
     node_to_insert->parent = y;
-    if (y == nullptr) {
+    if (y == RB_NULL_NODE) {
         tree->root = node_to_insert;
     } else if (tree->cmp(node_to_insert->key, y->key)) {
         y->left = node_to_insert;
     } else {
         y->right = node_to_insert;
     }
-    
     insert_fixup(tree, node_to_insert);
     tree->size += 1;
 }
 
 
 static void transplant(struct RBTree* tree, struct RBNode* u, struct RBNode* v) {
-    if (u->parent == nullptr) {
+    if (u->parent == RB_NULL_NODE) {
         tree->root = u;
     } else if (u == u->parent->left) {
         u->parent->left = v;
@@ -156,8 +169,8 @@ static void transplant(struct RBTree* tree, struct RBNode* u, struct RBNode* v) 
 }
 
 static struct RBNode* tree_min(struct RBNode *node) {
-    struct RBNode *found = nullptr;
-    while (node != nullptr) {
+    struct RBNode *found = RB_NULL_NODE;
+    while (node != RB_NULL_NODE) {
         found = node;
         node = node->left;
     }
@@ -167,16 +180,16 @@ static struct RBNode* tree_min(struct RBNode *node) {
 // Internal utility find, return a node.
 static struct RBNode* find(const struct RBTree *tree, const rb_key_t key) {
     struct RBNode* x = tree->root;
-    struct RBNode* y = nullptr;
-    while (x != nullptr) {
-        y = x;
-        if (tree->cmp(x->key, key)) {
+    while (x != RB_NULL_NODE) {
+        if (x->key == key) {
+            return x;
+        } else if (tree->cmp(key, x->key)) {
             x = x->left;
         } else {
             x = x->right;
         }
     }
-    return y;
+    return RB_NULL_NODE;
 }
 
 static void delete_fixup(struct RBTree *tree, struct RBNode *x) {
@@ -236,18 +249,18 @@ static void delete_fixup(struct RBTree *tree, struct RBNode *x) {
 
 void rb_tree_delete(struct RBTree *tree, const rb_key_t key) {
     struct RBNode *z = find(tree, key);
-    if (z == nullptr) {
+    if (z == RB_NULL_NODE) {
         return;
     }
 
     struct RBNode *y = z;
     enum RBColor y_orig_color = y->color;
-    struct RBNode *x = nullptr;
+    struct RBNode *x = RB_NULL_NODE;
 
-    if (z->left == nullptr) {
+    if (z->left == RB_NULL_NODE) {
         x = z->right;
         transplant(tree, z, z->right);
-    } else if (z->right == nullptr) {
+    } else if (z->right == RB_NULL_NODE) {
         x = z->left;
         transplant(tree, z, z->left);
     } else {
@@ -280,7 +293,7 @@ void rb_tree_delete(struct RBTree *tree, const rb_key_t key) {
 
 void* rb_tree_find(const struct RBTree *tree, const rb_key_t key) {
     struct RBNode* node = find(tree, key);
-    if (node != nullptr) {
+    if (node != RB_NULL_NODE) {
         return node->data;
     }
     return nullptr;
@@ -295,3 +308,6 @@ void* rb_tree_min(const struct RBTree *tree) {
     struct RBNode *m = tree_min(tree->root);
     return m->data;
 }
+
+
+#undef RB_NULL_NODE

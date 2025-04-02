@@ -30,8 +30,9 @@ typedef struct RBNode {
     enum RBColor color;
 } RBNode_t;
 
+
 #define RB_EMPTY_NODE {.parent=nullptr, .left=nullptr, .right=nullptr,\
-    .data=nullptr, .key=-1, .color=RB_RED}
+    .data=nullptr, .key=-1, .color=RB_BLACK}
 
 
 typedef struct RBTree {
@@ -52,6 +53,8 @@ typedef struct RBTree {
 #define RB_EMPTY_TREE {.root=nullptr, .size=0, .cmp=nullptr, .free=nullptr,\
     .alloc=nullptr}
 
+void rb_tree_init(struct RBTree *tree);
+
 // Insert data in the tree.
 void rb_tree_insert(struct RBTree *tree, const rb_key_t key, void *data);
 
@@ -59,7 +62,7 @@ void rb_tree_insert(struct RBTree *tree, const rb_key_t key, void *data);
 void rb_tree_delete(struct RBTree *tree, const rb_key_t key);
 
 // Free the tree.
-void rb_tree_free();
+void rb_tree_free(struct RBTree *tree);
 
 // Return the data associated to the key if present, NULL otherwise.
 void* rb_tree_find(const struct RBTree *tree, const rb_key_t key);
