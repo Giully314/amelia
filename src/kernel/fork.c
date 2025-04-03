@@ -4,8 +4,8 @@
 #include <amelia/kernel/scheduler.h>
 #include <amelia/kernel/task.h>
 #include <amelia/memory.h>
-#include <amelia/printf.h>
 #include <amelia/memory/page_allocator.h>
+#include <amelia/printf.h>
 
 i32 start_process_with_priority(ptr_t function, ptr_t arg, i32 priority)
 {
@@ -33,14 +33,14 @@ i32 start_process_with_priority(ptr_t function, ptr_t arg, i32 priority)
 	// The stack starts after the Task struct.
 	t->cpu_context.sp = (u64)(t + THREAD_SIZE);
 
-	i32 pid = size_tasks++;
-	tasks[pid] = t;
+	scheduler_add_task(t);
 	scheduler_preempt_enable();
 
 	return 0;
 }
 
-
-i32 start_process(ptr_t function, ptr_t arg) {
-	return start_process_with_priority(function, arg, current_task->priority);
+i32 start_process(ptr_t function, ptr_t arg)
+{
+	return start_process_with_priority(function, arg,
+					   scheduler_current_task()->priority);
 }
