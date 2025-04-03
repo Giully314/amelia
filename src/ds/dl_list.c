@@ -45,7 +45,7 @@ void dl_list_push_front(struct DLList *list, void *data)
 		list->last = node_to_insert;
 	} else {
 		list->first->prev = node_to_insert;
-		node_to_insert->next = list->next;
+		node_to_insert->next = list->first;
 		list->first = node_to_insert;
 	}
 	++list->size;
