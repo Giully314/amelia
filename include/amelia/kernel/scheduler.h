@@ -18,15 +18,6 @@
 
 #define THREAD_SIZE 4096
 
-#define FIRST_TASK tasks[0]
-#define LAST_TASK tasks[MAX_NUMBER_OF_TASKS - 1]
-
-extern Task *current_task;
-extern Task *tasks[MAX_NUMBER_OF_TASKS];
-
-// Current number of tasks.
-extern u32 size_tasks;
-
 // Initialize the scheduler.
 void scheduler_init();
 
@@ -45,6 +36,10 @@ void scheduler_switch_to(struct Task *next);
 void scheduler_cpu_switch_to(struct Task *prev, struct Task *next);
 
 void ret_from_fork();
+
+void scheduler_add_task(struct Task *t);
+
+struct Task *scheduler_current_task();
 
 // clang-format off
 #define INIT_TASK \

@@ -1,23 +1,56 @@
 // src/kernel/scheduler.c
 // DESCRIPTION:
+//	The execution of the scheduler right now is simple, each time the queue
+// 	of tasks to be executed is empty, the scheduler re assign to each task
+//	a new counter of execution.
 //
 
+#include <amelia/ds/dl_list.h>
+#include <amelia/ds/rb_tree.h>
 #include <amelia/kernel/scheduler.h>
 #include <amelia/kernel/task.h>
+#include <amelia/memory/page_allocator.h>
+#include <amelia/memory/pool_allocator.h>
 #include <amelia/peripherals/irq.h>
 #include <amelia/printf.h>
 
-// Setup the list of tasks and initialize the first task.
+// The Scheduler struct is responsible to schedule tasks on a single cpu.
+// Each cpu has its own Scheduler with its internal queue of tasks.
+// For now there is only 1 cpu in usage, so things are simple, but for
+// multiple cpu, we need to use a lock for accessing this class to enable task
+// assignment to each scheduler and possibly task stealing to balance the workload.
+// In future there will be another layer of abstraction for assigning task to cpu
+// after the scheduler execution, called the task dispatcher.
+struct Scheduler {
+	struct DLList task_list;
 
-static struct Task init_task = INIT_TASK;
+	struct Task *current_task;
+	struct PoolAllocator list_alloc;
 
-// Current task in execution.
-struct Task *current_task = &init_task;
+	// Page of memory used by the allocators.
+	struct MemoryBlock page;
+};
 
-// For now the list of tasks is fixed to 64.
-struct Task *tasks[MAX_NUMBER_OF_TASKS];
+struct Scheduler sched;
 
-u32 size_tasks = 1;
+void scheduler_init()
+{
+	sched.page = memory_get_page();
+	// sched.list_alloc.block = sched.page doesn't work, it raises el1h exception.
+	// Why?
+	sched.list_alloc.block.start = sched.page.start;
+	sched.list_alloc.block.size = sched.page.size;
+
+	sched.list_alloc.obj_size = sizeof(struct DLNode);
+	pool_allocator_init(&sched.list_alloc, 8);
+
+	sched.task_list.alloc = &sched.list_alloc;
+
+	sched.current_task = (struct Task *)memory_get_page().start;
+	*sched.current_task = (struct Task)INIT_TASK;
+
+	dl_list_push_back(&sched.task_list, (void *)sched.current_task);
+}
 
 // This algorithm is almost a copy of the scheduler algorithm found in the
 // first linux version.
@@ -29,22 +62,23 @@ u32 size_tasks = 1;
 void _schedule()
 {
 	scheduler_preempt_disable();
-	u32 next = 0;
 	i32 c = 0;
 	struct Task *t;
+	struct Task *next;
 
 	while (1) {
 		c = -1;
 		next = 0;
 		// Get the task with the higher counter; this means this task
 		// is the one who execution time was the least among the others.
-		for (u32 i = 0; i < MAX_NUMBER_OF_TASKS; ++i) {
-			t = tasks[i];
-
-			if (t && t->state == TASK_RUNNING && t->counter > c) {
+		struct DLNode *curr = sched.task_list.first;
+		while (curr != nullptr) {
+			t = curr->data;
+			if (t->state == TASK_RUNNING && t->counter > c) {
 				c = t->counter;
-				next = i;
+				next = t;
 			}
+			curr = curr->next;
 		}
 
 		// If a task respecting the previous rule is found, schedule it.
@@ -54,24 +88,15 @@ void _schedule()
 
 		// Execute this function only if all the tasks are in a 0 counter
 		// state or are not in a running state.
-		for (u32 i = 0; i < MAX_NUMBER_OF_TASKS; ++i) {
-			t = tasks[i];
-			if (t) {
-				t->counter = (t->counter >> 1) + t->priority;
-			}
+		curr = sched.task_list.first;
+		while (curr != nullptr) {
+			t = curr->data;
+			t->counter = (t->counter >> 1) + t->priority;
+			curr = curr->next;
 		}
 	}
-	scheduler_switch_to(tasks[next]);
+	scheduler_switch_to(next);
 	scheduler_preempt_enable();
-}
-
-void scheduler_init()
-{
-	tasks[0] = &init_task;
-	size_tasks = 1;
-	for (u32 i = 1; i < MAX_NUMBER_OF_TASKS; ++i) {
-		tasks[i] = nullptr;
-	}
 }
 
 void scheduler_schedule_tail()
@@ -81,13 +106,14 @@ void scheduler_schedule_tail()
 
 void scheduler_timer_tick()
 {
+	struct Task *current_task = sched.current_task;
 	--current_task->counter;
 	if (current_task->counter > 0 || current_task->preempt_count > 0) {
 		return;
 	}
 
 	current_task->counter = 0;
-	
+
 	irq_enable();
 	_schedule();
 	irq_disable();
@@ -95,26 +121,36 @@ void scheduler_timer_tick()
 
 void scheduler_preempt_enable()
 {
-	--current_task->preempt_count;
+	--sched.current_task->preempt_count;
 }
 
 void scheduler_preempt_disable()
 {
-	++current_task->preempt_count;
+	++sched.current_task->preempt_count;
 }
 
 void scheduler_switch_to(struct Task *next)
 {
-	if (current_task == next) {
+	if (sched.current_task == next) {
 		return;
 	}
-	struct Task *prev = current_task;
-	current_task = next;
+	struct Task *prev = sched.current_task;
+	sched.current_task = next;
 	scheduler_cpu_switch_to(prev, next);
 }
 
 void scheduler_schedule()
 {
-	current_task->counter = 0;
+	sched.current_task->counter = 0;
 	_schedule();
+}
+
+void scheduler_add_task(struct Task *t)
+{
+	dl_list_push_back(&sched.task_list, (void *)t);
+}
+
+struct Task *scheduler_current_task()
+{
+	return sched.current_task;
 }
