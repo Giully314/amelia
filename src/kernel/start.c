@@ -1,10 +1,15 @@
 // src/kernel/start.c
 // DESCRIPTION: This file has methods for the start of the kernel.
 
+#include <amelia/algorithms/comparators.h>
+#include <amelia/ds/rb_tree.h>
 #include <amelia/hardware/exception_entry.h>
 #include <amelia/kernel/fork.h>
 #include <amelia/kernel/scheduler.h>
 #include <amelia/memory.h>
+#include <amelia/memory/mblock.h>
+#include <amelia/memory/page_allocator.h>
+#include <amelia/memory/pool_allocator.h>
 #include <amelia/peripherals/irq.h>
 #include <amelia/peripherals/irq_regs.h>
 #include <amelia/peripherals/timer/local_timer.h>
@@ -50,6 +55,10 @@ void process(char *array)
 			delay(10000000);
 		}
 	}
+}
+
+void null_function(void *p)
+{
 }
 
 // Kernel main, executed at EL1.
