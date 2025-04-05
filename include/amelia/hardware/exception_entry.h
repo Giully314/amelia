@@ -10,20 +10,18 @@
 //  3) FIQ (Fast Interrupt request)
 //  4) SError (System Error)
 //  Only 1) is executed by the processor itself (usually for system calls) and so
-//  it is synchronous, while the others are executed by external hardware and 
+//  it is synchronous, while the others are executed by external hardware and
 //  can happen at any time in the current control flow. When an exception is raised
 //  the processor jump to a location in memory called interrupt vector table.
-//  This table has, for each type of exception and for each of the 4 handler, 
+//  This table has, for each type of exception and for each of the 4 handler,
 //  a piece of code to execute to handle that type of exception.
-//  
-
+//
 
 #ifndef _AMELIA_HARDWARE_EXCEPTION_ENTRY_H
 #define _AMELIA_HARDWARE_EXCEPTION_ENTRY_H
 
-
 #define STACK_FRAME_SIZE 256
-
+#define S_X0 0 // offset of x0 in the stack entry.
 
 // el1_t: exception is taken from el1 but SP is shared with el0.
 #define SYNC_INVALID_EL1t 0
@@ -48,5 +46,8 @@
 #define IRQ_INVALID_EL0_32 13
 #define FIQ_INVALID_EL0_32 14
 #define SERROR_INVALID_EL0_32 15
+
+#define SYNC_ERROR 16
+#define SYSCALL_ERROR 17
 
 #endif // _AMELIA_HARDWARE_EXCEPTION_ENTRY_H

@@ -3,6 +3,8 @@
 //  Defines the basic building blocks for handling exceptions.
 
 #include <amelia/hardware/exception_entry.h>
+#include <amelia/arm/sysregs.h>
+#include <amelia/kernel/syscall.h>
 
 // Define a macro helper for exception entry.
 .macro ventry label
@@ -16,8 +18,8 @@ b \label
 // about the exception.
 // The elr_el1 (exception link register for el1) holds the address of the 
 // instruction to execute after the exception is handled.
-.macro handle_invalid_entry type
-kernel_entry
+.macro handle_invalid_entry el type
+kernel_entry \el
 mov x0, #\type
 mrs x1, esr_el1
 mrs x2, elr_el1
@@ -32,10 +34,10 @@ b err_hang
 err_hang:
     b err_hang
 
-
+// TODO: save the state of SIMD and FP registers.
 // Save the state of the registers onto the stack before jumping
 // in the exception.
-.macro kernel_entry
+.macro kernel_entry el
 sub sp, sp, #STACK_FRAME_SIZE
 stp x0, x1, [sp, #16 * 0]
 stp x2, x3, [sp, #16 * 1]
@@ -53,18 +55,29 @@ stp x24, x25, [sp, #16 * 12]
 stp x26, x27, [sp, #16 * 13]
 stp x28, x29, [sp, #16 * 14]
 
+// If we are in el0, we need to use the stack pointer of el0, so save it.
+.if \el == 0
+mrs x21, sp_el0
+.else
+add x21, sp, #STACK_FRAME_SIZE
+.endif // \el == 0
+
 // Save the register for interrupt recovery (eret).
 mrs x22, elr_el1
 mrs x23, spsr_el1
 
-stp x30, x22, [sp, #16 * 15]
-str x23, [sp, #16 * 16]
+stp x30, x21, [sp, #16 * 15]
+stp x22, x23, [sp, #16 * 16]
 .endm
 
 // Restore the state of the registers after exception handling.
-.macro kernel_exit
-ldr x23, [sp, #16 * 16]
-ldp x30, x22, [sp, #16 * 15]
+.macro kernel_exit el
+ldp x22, x23, [sp, #16 * 16]
+ldp x30, x21, [sp, #16 * 15]
+
+.if \el == 0
+msr sp_el0, x21
+.endif // \el == 0
 
 // Restore the address and state for eret.
 msr elr_el1, x22
@@ -94,77 +107,114 @@ eret
 .align 11
 .global vectors
 vectors:
-    ventry sync_invalid_el1t
-    ventry irq_invalid_el1t
-    ventry fiq_invalid_el1t
-    ventry serror_invalid_el1t
+    ventry sync_invalid_el1t    // sync el1t
+    ventry irq_invalid_el1t     // irq el1t
+    ventry fiq_invalid_el1t     // fiq el1t
+    ventry serror_invalid_el1t  // error el1t
 
-    ventry sync_invalid_el1h
-    ventry eli1_irq
-    ventry fiq_invalid_el1h
-    ventry serror_invalid_el1h
+    ventry sync_invalid_el1h    // sync el1h
+    ventry el1_irq              // irq el1h
+    ventry fiq_invalid_el1h     // fiq el1h
+    ventry serror_invalid_el1h  // error el1h
 
-    ventry sync_invalid_el0_64
-    ventry irq_invalid_el0_64
-    ventry fiq_invalid_el0_64
-    ventry serror_invalid_el0_64
+    ventry el0_sync                 // sync 64-bit el0
+    ventry irq_invalid_el0_64       // irq 64-bit el0
+    ventry fiq_invalid_el0_64       // fiq 64-bit el0
+    ventry serror_invalid_el0_64    // error 64-bit el0
 
-    ventry sync_invalid_el0_32
-    ventry irq_invalid_el0_32
-    ventry fiq_invalid_el0_32
-    ventry serror_invalid_el0_32
+    ventry sync_invalid_el0_32      // sync 32-bit el0
+    ventry irq_invalid_el0_32       // irq 32-bit el0
+    ventry fiq_invalid_el0_32       // fiq 32-bit el0
+    ventry serror_invalid_el0_32    // error 32-bit el0
 
 
 sync_invalid_el1t:
-    handle_invalid_entry SYNC_INVALID_EL1t
+    handle_invalid_entry 1 SYNC_INVALID_EL1t
 
 irq_invalid_el1t:
-    handle_invalid_entry IRQ_INVALID_EL1t
+    handle_invalid_entry 1 IRQ_INVALID_EL1t
 
 fiq_invalid_el1t:
-    handle_invalid_entry FIQ_INVALID_EL1t
+    handle_invalid_entry 1 FIQ_INVALID_EL1t
 
 serror_invalid_el1t:
-    handle_invalid_entry SERROR_INVALID_EL1t
+    handle_invalid_entry 1 SERROR_INVALID_EL1t
 
 sync_invalid_el1h:
-    handle_invalid_entry SYNC_INVALID_EL1h
+    handle_invalid_entry 1 SYNC_INVALID_EL1h
 
 irq_invalid_el1h:
-    handle_invalid_entry IRQ_INVALID_EL1h
+    handle_invalid_entry 1 IRQ_INVALID_EL1h
 
 fiq_invalid_el1h:
-    handle_invalid_entry FIQ_INVALID_EL1h
+    handle_invalid_entry 1 FIQ_INVALID_EL1h
 
 serror_invalid_el1h:
-    handle_invalid_entry SERROR_INVALID_EL1h
+    handle_invalid_entry 1 SERROR_INVALID_EL1h
 
 sync_invalid_el0_64:
-    handle_invalid_entry SYNC_INVALID_EL0_64
+    handle_invalid_entry 0 SYNC_INVALID_EL0_64
 
 irq_invalid_el0_64:
-    handle_invalid_entry IRQ_INVALID_EL0_64
+    handle_invalid_entry 0 IRQ_INVALID_EL0_64
 
 fiq_invalid_el0_64:
-    handle_invalid_entry FIQ_INVALID_EL0_64 
+    handle_invalid_entry 0 FIQ_INVALID_EL0_64 
 
 serror_invalid_el0_64:
-    handle_invalid_entry SERROR_INVALID_EL0_64 
+    handle_invalid_entry 0 SERROR_INVALID_EL0_64 
 
 sync_invalid_el0_32:
-    handle_invalid_entry SYNC_INVALID_EL0_32 
+    handle_invalid_entry 0 SYNC_INVALID_EL0_32 
 
 irq_invalid_el0_32:
-    handle_invalid_entry IRQ_INVALID_EL0_32 
+    handle_invalid_entry 0 IRQ_INVALID_EL0_32 
 
 fiq_invalid_el0_32:
-    handle_invalid_entry FIQ_INVALID_EL0_32 
+    handle_invalid_entry 0 FIQ_INVALID_EL0_32 
 
 serror_invalid_el0_32:
-    handle_invalid_entry SERROR_INVALID_EL0_32 
+    handle_invalid_entry 0 SERROR_INVALID_EL0_32 
 
 // interrupt procedure for eli1h irq.
-eli1_irq:
-    kernel_entry
+el1_irq:
+    kernel_entry 1
     bl irq_handle
-    kernel_exit
+    kernel_exit 1
+
+// interrupt procedure for sync el0 64-bit.
+// The ESR_EL1 (exception syndrome register el1) contains information
+// about the exception generated. In this case we need to check if the exception
+// is generated by a svc call.
+el0_sync:
+    kernel_entry 0
+    mrs x25, esr_el1 // read the syndrome register 
+    lsr x24, x25, #ESR_ELx_EC_SHIFT 
+    cmp x24, #ESR_ELx_EC_SVC64 // check if the exception is raised from svc.
+    b.eq el0_svc 
+    handle_invalid_entry 0, SYNC_ERROR // if not crashes the system, right now no support for this.
+
+sc_nr .req x25 // number of system calls
+scno  .req x26 // syscall number
+stbl  .req x27 // syscall table pointer
+
+el0_svc:
+    adr stbl, sys_call_table
+    uxtw scno, w8  // zero extending w8 into scno register
+    mov sc_nr, #__NR_syscall
+    bl irq_enable
+    cmp scno, sc_nr
+    b.hs ni_sys // check if the syscall number is greater or equal to upper limits, in case branch to error.
+
+    // address in the syscall table, stbl + (scno << 3)
+    ldr x16, [stbl, scno, lsl #3] 
+    blr x16
+    b ret_from_syscall
+
+ni_sys:
+    handle_invalid_entry 0, SYSCALL_ERROR
+
+ret_from_syscall:
+    bl irq_disable
+    str x0, [sp, #S_X0] // returned x0.
+    kernel_exit 0
