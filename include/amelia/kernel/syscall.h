@@ -15,6 +15,8 @@
 #define SYS_FORK_NUMBER 2
 #define SYS_EXIT_NUMBER 3
 
+#define __NR_syscall 4
+
 #ifndef __ASSEMBLER__
 
 #include <amelia/basic_types.h>
