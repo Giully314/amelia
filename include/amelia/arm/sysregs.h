@@ -26,8 +26,10 @@
 
 #define SCTLR_EL1_RESERVED (3 << 28) | (3 << 22) | (1 << 20) | (1 << 11)
 
-#define SCTLR_EL1_VALUE_MMU_DISABLED \
-    (SCTLR_EL1_RESERVED | SCTLR_EL1_EE_LITTLE_ENDIAN | SCTLR_EL1_D_CACHE_DISABLED | SCTLR_EL1_I_CACHE_DISABLED | SCTLR_EL1_MMU_DISABLED)
+#define SCTLR_EL1_VALUE_MMU_DISABLED                               \
+	(SCTLR_EL1_RESERVED | SCTLR_EL1_EE_LITTLE_ENDIAN |         \
+	 SCTLR_EL1_D_CACHE_DISABLED | SCTLR_EL1_I_CACHE_DISABLED | \
+	 SCTLR_EL1_MMU_DISABLED)
 
 // ***********************
 // Hypervisor Configuration Register EL2 (hcr_el2), Page 2487 of AArch64 reference manual.
@@ -50,7 +52,6 @@
 
 #define SCR_EL3_VALUE (SCR_EL3_RESERVED | SCR_EL3_RW | SCR_EL3_NS)
 
-
 // ***********************
 // Saved Program Status Register EL2, Page 383 of AArch64 reference manual.
 // ***********************
@@ -58,7 +59,7 @@
 // Disable exceptions.
 #define SPSR_EL2_MASK_ALL (7 << 6)
 
-// Use EL1 with its SP. 
+// Use EL1 with its SP.
 #define SPSR_EL2_EL1h (5 << 0)
 
 #define SPSR_EL2_VALUE (SPSR_EL2_EL1h | SPSR_EL2_MASK_ALL)
@@ -70,13 +71,10 @@
 // Disable exceptions.
 #define SPSR_EL3_MASK_ALL (7 << 6)
 
-// Use EL2 with its SP. 
+// Use EL2 with its SP.
 #define SPSR_EL3_EL1h (9 << 0)
 
 #define SPSR_EL3_VALUE (SPSR_EL3_EL1h | SPSR_EL3_MASK_ALL)
-
-
-
 
 // ***********************
 // CPACR_EL1 controls for SIMD and FP registers, Page 2411 of AArch64 reference manual.
@@ -86,4 +84,11 @@
 
 #define CPACR_VALUE (CPACR_EL1_FPEN_ENABLED)
 
-#endif  // _AMELIA_ARM_SYSREGS_H
+// ***********************
+// ESR_EL1, Exception syndrom register (EL1). Page 2431 of AArch64 reference manual.
+// ***********************
+
+#define ESR_ELx_EC_SHIFT 26
+#define ESR_ELx_EC_SVC64 0x15
+
+#endif // _AMELIA_ARM_SYSREGS_H
