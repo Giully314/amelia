@@ -88,6 +88,7 @@
 // ESR_EL1, Exception syndrom register (EL1). Page 2431 of AArch64 reference manual.
 // ***********************
 
+// Check page 2438 for these values.
 #define ESR_ELx_EC_SHIFT 26
 #define ESR_ELx_EC_SVC64 0x15
 
