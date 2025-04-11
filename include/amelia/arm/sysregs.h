@@ -92,4 +92,17 @@
 #define ESR_ELx_EC_SHIFT 26
 #define ESR_ELx_EC_SVC64 0x15
 
+// ***********************
+// SPSR_EL1, Saved Program Status Register (EL1). Page 377 of AArch64 reference manual.
+// ***********************
+
+// Value for the Program status register.
+#define PSR_MODE_EL0t 0x00000000
+#define PSR_MODE_EL1t 0x00000004
+#define PSR_MODE_EL1h 0x00000005
+#define PSR_MODE_EL2t 0x00000008
+#define PSR_MODE_EL2h 0x00000009
+#define PSR_MODE_EL3t 0x0000000c
+#define PSR_MODE_EL3h 0x0000000d
+
 #endif // _AMELIA_ARM_SYSREGS_H

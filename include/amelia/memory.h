@@ -38,7 +38,9 @@
 
 void memzero(ptr_t src, u64 num_bytes);
 
-void* memory_align(void *p, u64 alignment);
+void memcpy(void *src, void *dest, u64 num_bytes);
+
+void *memory_align(void *p, u64 alignment);
 
 #endif
 

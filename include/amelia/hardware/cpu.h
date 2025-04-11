@@ -36,10 +36,19 @@ struct CPUContext {
 	u64 d13;
 	u64 d14;
 	u64 d15;
-	
+
 	u64 fp; // x29
 	u64 sp; // x9
 	u64 pc;
+};
+
+// This struct defines how registers are stored on the stack during an
+// exception.
+struct ProcessTraceRegs {
+	u64 regs[31];
+	u64 sp;
+	u64 pc;
+	u64 pstate; // processor state.
 };
 
 #endif // _AMELIA_HARDWARE_CPU_H

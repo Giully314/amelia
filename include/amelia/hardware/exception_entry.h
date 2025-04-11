@@ -20,7 +20,7 @@
 #ifndef _AMELIA_HARDWARE_EXCEPTION_ENTRY_H
 #define _AMELIA_HARDWARE_EXCEPTION_ENTRY_H
 
-#define STACK_FRAME_SIZE 256
+#define STACK_FRAME_SIZE 384
 #define S_X0 0 // offset of x0 in the stack entry.
 
 // el1_t: exception is taken from el1 but SP is shared with el0.

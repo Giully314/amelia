@@ -21,17 +21,27 @@
 
 #include <amelia/basic_types.h>
 
-// Write a buffer.
-void sys_write(char *buffer);
+// #include <amelia/basic_types.h>
 
-// Fork a process.
-i32 sys_fork();
+// // Write a buffer.
+// void sys_write(char *buffer);
 
-// Return a page of memory.
-void *sys_malloc();
+// // Fork a process.
+// i32 sys_create_process(u64 fn, u64 arg, u64 stack);
 
-// Correct exit of a user process.
-void sys_exit();
+// // Return a page of memory.
+// void *sys_malloc();
+
+// // Correct exit of a user process.
+// void sys_exit();
+
+i32 sys_fork(u64 f, u64 arg, u64 stack);
+
+// Return a page of physical memory.
+void *page_malloc();
+
+// Correct termination of a process.
+void exit();
 
 #endif // __ASSEMBLER__
 

@@ -39,11 +39,11 @@ err_hang:
 // in the exception.
 .macro kernel_entry el
 sub sp, sp, #STACK_FRAME_SIZE
-stp x0, x1, [sp, #16 * 0]
-stp x2, x3, [sp, #16 * 1]
-stp x4, x5, [sp, #16 * 2]
-stp x6, x7, [sp, #16 * 3]
-stp x8, x9, [sp, #16 * 4]
+stp x0, x1,   [sp, #16 * 0]
+stp x2, x3,   [sp, #16 * 1]
+stp x4, x5,   [sp, #16 * 2]
+stp x6, x7,   [sp, #16 * 3]
+stp x8, x9,   [sp, #16 * 4]
 stp x10, x11, [sp, #16 * 5]
 stp x12, x13, [sp, #16 * 6]
 stp x14, x15, [sp, #16 * 7]
@@ -68,10 +68,28 @@ mrs x23, spsr_el1
 
 stp x30, x21, [sp, #16 * 15]
 stp x22, x23, [sp, #16 * 16]
+
+stp d0, d1,   [sp, #16 * 17]
+stp d2, d3,   [sp, #16 * 18]
+stp d4, d5,   [sp, #16 * 19]
+stp d6, d7,   [sp, #16 * 20]
+stp d8, d9,   [sp, #16 * 21]
+stp d10, d11, [sp, #16 * 22]
+stp d12, d13, [sp, #16 * 23]
+stp d14, d15, [sp, #16 * 24]
 .endm
 
 // Restore the state of the registers after exception handling.
 .macro kernel_exit el
+ldp d0, d1,   [sp, #16 * 17]
+ldp d2, d3,   [sp, #16 * 18]
+ldp d4, d5,   [sp, #16 * 19]
+ldp d6, d7,   [sp, #16 * 20]
+ldp d8, d9,   [sp, #16 * 21]
+ldp d10, d11, [sp, #16 * 22]
+ldp d12, d13, [sp, #16 * 23]
+ldp d14, d15, [sp, #16 * 24]
+
 ldp x22, x23, [sp, #16 * 16]
 ldp x30, x21, [sp, #16 * 15]
 
@@ -83,11 +101,11 @@ msr sp_el0, x21
 msr elr_el1, x22
 msr spsr_el1, x23
 
-ldp x0, x1, [sp, #16 * 0]
-ldp x2, x3, [sp, #16 * 1]
-ldp x4, x5, [sp, #16 * 2]
-ldp x6, x7, [sp, #16 * 3]
-ldp x8, x9, [sp, #16 * 4]
+ldp x0, x1,   [sp, #16 * 0]
+ldp x2, x3,   [sp, #16 * 1]
+ldp x4, x5,   [sp, #16 * 2]
+ldp x6, x7,   [sp, #16 * 3]
+ldp x8, x9,   [sp, #16 * 4]
 ldp x10, x11, [sp, #16 * 5]
 ldp x12, x13, [sp, #16 * 6]
 ldp x14, x15, [sp, #16 * 7]
@@ -118,7 +136,7 @@ vectors:
     ventry serror_invalid_el1h  // error el1h
 
     ventry el0_sync                 // sync 64-bit el0
-    ventry irq_invalid_el0_64       // irq 64-bit el0
+    ventry el0_irq                  // irq 64-bit el0
     ventry fiq_invalid_el0_64       // fiq 64-bit el0
     ventry serror_invalid_el0_64    // error 64-bit el0
 
@@ -182,6 +200,12 @@ el1_irq:
     bl irq_handle
     kernel_exit 1
 
+
+el0_irq:
+    kernel_entry 0
+    bl irq_handle
+    kernel_exit 0
+
 // interrupt procedure for sync el0 64-bit.
 // The ESR_EL1 (exception syndrome register el1) contains information
 // about the exception generated. In this case we need to check if the exception
@@ -217,4 +241,9 @@ ni_sys:
 ret_from_syscall:
     bl irq_disable
     str x0, [sp, #S_X0] // returned x0.
+    kernel_exit 0
+
+.global ret_to_user
+ret_to_user:
+    bl irq_disable
     kernel_exit 0

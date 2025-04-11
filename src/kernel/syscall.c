@@ -1,5 +1,6 @@
 // src/kernel/syscall.c
 #include <amelia/kernel/fork.h>
+#include <amelia/kernel/scheduler.h>
 #include <amelia/kernel/syscall.h>
 #include <amelia/memory/page_allocator.h>
 #include <amelia/printf.h>
@@ -20,14 +21,15 @@ void *sys_malloc()
 	return m.start;
 }
 
-i32 sys_fork()
+i32 sys_create_process(u64 stack)
 {
-	// return start_process
-	return -1;
+	return kfork(0, 0, 0, stack);
 }
 
 void sys_exit()
 {
+	scheduler_exit_process();
 }
 
-void *sys_call_table[] = { sys_write, sys_malloc, sys_fork, sys_exit };
+void *sys_call_table[] = { sys_write, sys_malloc, sys_create_process,
+			   sys_exit };

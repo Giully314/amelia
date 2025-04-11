@@ -41,10 +41,15 @@ void scheduler_add_task(struct Task *t);
 
 struct Task *scheduler_current_task();
 
+// Release memory associated with a task. The task (following Linux approach)
+// is not deleted but it is put in zombie mode to avoid to be selected
+// by the scheduler for running.
+void scheduler_exit_process();
+
 // clang-format off
 #define INIT_TASK \
-/*cpu_context*/	{ {0,0,0,0,0,0,0,0,0,0,0,0,0}, \
-/* state etc */	TASK_RUNNING,0,1,1,0 \
+/*cpu_context*/	{ {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, \
+/* state etc */	TASK_RUNNING,0,1,0, 0, TASK_KERNEL_THREAD, 1 \
 }
 // clang-format on
 

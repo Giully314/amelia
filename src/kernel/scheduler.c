@@ -9,10 +9,14 @@
 #include <amelia/ds/rb_tree.h>
 #include <amelia/kernel/scheduler.h>
 #include <amelia/kernel/task.h>
+#include <amelia/memory.h>
 #include <amelia/memory/page_allocator.h>
 #include <amelia/memory/pool_allocator.h>
 #include <amelia/peripherals/irq.h>
 #include <amelia/printf.h>
+
+// This is temporary.
+static u64 next_pid = 2;
 
 // The Scheduler struct is responsible to schedule tasks on a single cpu.
 // Each cpu has its own Scheduler with its internal queue of tasks.
@@ -47,7 +51,9 @@ void scheduler_init()
 	sched.task_list.alloc = &sched.list_alloc;
 
 	sched.current_task = (struct Task *)memory_get_page().start;
-	*sched.current_task = (struct Task)INIT_TASK;
+	struct Task init_task = (struct Task)INIT_TASK;
+	memcpy((void *)&init_task, (void *)sched.current_task,
+	       sizeof(struct Task));
 
 	dl_list_push_back(&sched.task_list, (void *)sched.current_task);
 }
@@ -147,10 +153,35 @@ void scheduler_schedule()
 
 void scheduler_add_task(struct Task *t)
 {
+	t->pid = next_pid++;
 	dl_list_push_back(&sched.task_list, (void *)t);
 }
 
 struct Task *scheduler_current_task()
 {
 	return sched.current_task;
+}
+
+void scheduler_exit_process()
+{
+	scheduler_preempt_disable();
+
+	struct DLNode *current = sched.task_list.first;
+	struct Task *t = nullptr;
+
+	while (current != nullptr) {
+		t = (struct Task *)current->data;
+		if (t == sched.current_task) {
+			t->state = TASK_ZOMBIE;
+			break;
+		}
+		current = current->next;
+	}
+
+	if (sched.current_task->stack) {
+		memory_free_page((void *)sched.current_task->stack);
+	}
+
+	scheduler_preempt_enable();
+	scheduler_schedule();
 }

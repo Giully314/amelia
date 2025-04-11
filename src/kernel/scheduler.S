@@ -51,5 +51,10 @@ ret_from_fork:
     // to creating a new task for the scheduler) we setup the x19 register with
     // the address of the function to execute and the x20 register with a pointer
     // to the arg to pass to the function.
+    cbz x19, ret_to_user // defined in exception_entry.S
     mov x0, x20
     blr x19 // Should never return.
+
+// ret_to_user:
+//     bl irq_disable
+//     kernel_exit 0
