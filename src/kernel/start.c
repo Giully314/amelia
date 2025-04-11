@@ -49,7 +49,7 @@ void kernel_init(unsigned int processor_id)
 
 void process(char *array)
 {
-	while (1) {
+	for (int i = 0; i < 3; ++i) {
 		for (int i = 0; i < 5; i++) {
 			mini_uart_send(array[i]);
 			delay(10000000);
@@ -76,11 +76,11 @@ void kernel_main(unsigned int processor_id)
 		printf("error while starting process 1");
 		return;
 	}
-	res = start_process((u64)&process, (u64) "abcde");
-	if (res != 0) {
-		printf("error while starting process 2");
-		return;
-	}
+	// res = start_process((u64)&process, (u64) "abcde");
+	// if (res != 0) {
+	// 	printf("error while starting process 2");
+	// 	return;
+	// }
 
 	while (1) {
 		printf("SAMPLE\n");
