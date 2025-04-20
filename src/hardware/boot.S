@@ -17,7 +17,7 @@
 
 .section ".text.boot"
 
-.global _start  
+.globl _start  
 _start: 
     // Load the state of the multiprocessor affinity register.
     // To access this special register we need a special instruction, mrs
