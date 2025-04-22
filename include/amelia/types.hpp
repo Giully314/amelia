@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
+#include <stdint.h>
 
 namespace amelia {
 
@@ -18,5 +17,7 @@ using u16 = uint16_t;
 using u32 = uint32_t;
 using u64 = uint64_t;
 using ptr_t = u64;
+
+using byte = u8;
 
 } // namespace amelia

@@ -6,9 +6,10 @@ ENTRY (_start)
 
 SECTIONS 
 {
-    . = 0x0;
-    /*Even if not referenced, keep the boot section and the interrupt vector table.*/ 
+    /*. = 0x0;
+    Even if not referenced, keep the boot section and the interrupt vector table.
     .text.ivt : {KEEP(*(.text.ivt))}
+    */
     . = 0x80000;
     .text.boot : {KEEP(*(.text.boot))}
     .text : { *(.text .text.*) }

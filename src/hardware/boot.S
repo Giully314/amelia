@@ -1,16 +1,16 @@
 // src/hardware/boot.S
 // DESCRIPTION:
 //  The kernel is loaded at 0x80000000. This file is placed at that position
-//  by the boot.ld script.
+//  by the linker.ld script.
 //  The job of this file is to execute initialization steps for the machine like:
 //  1) EL3 -> EL2 -> EL1 setup.
 //  2) Setup bss section.
 //  3) Setup the stack.
-//  4) Call kernel_init defined in start.c.
-//  5) Call kernel_main defined in start.c.
+//  4) Call kernel_init defined in kernel_start.c.
+//  5) Call kernel_main defined in kernel_start.c.
 //  
 //  For now there is only one core active, the rest just hang in a loop.
-//  
+//  For more information check doc/boot.md.
 
 #include <amelia/hardware/platform_config.hpp>
 #include <amelia/arm/sysregs.hpp>
@@ -28,20 +28,17 @@ _start:
     // In this case we are interested to get the core id and choose on of the core
     // to start the execution (in this case the core with id 0).
     // https://developer.arm.com/documentation/ddi0500/j/System-Control/AArch64-register-descriptions/Multiprocessor-Affinity-Register?lang=en
-    mrs x0, mpidr_el1
-    and x0, x0, #0x3
-    mov x2, x0 // save the processor id
+    bl get_processor_id
     cbz x0, master
     
-    // for all non primary processor, wait for 150 cycles.
-    // mov x0, #150
-    // bl delay
+    // for all non primary processors.
     b proc_hang
 
 proc_hang:
     b proc_hang
 
-// The master process is responsible to initialize the state of the OS such as EL, stack and wake up other cores.
+// The master process is responsible to initialize the state of the OS such as EL, stack 
+// and (in future) wake up other cores.
 master:
     // Set the system control register (el1). Configure parameters such as cache access, MMU and it 
     // accessible from >= el1. 
@@ -85,30 +82,32 @@ el2_entry:
     eret
 
 el1_entry:
+    bl get_processor_id
+    // Save core id for future use in this routine.
+    mov x19, x0
     bl init_stack
     bl init_bss
 
-    // Load processor id.
-    mrs x0, mpidr_el1
-    and x0, x0, #0x3
-    bl kernel_init
+    mov x0, x19
+    bl kernel_entry_point 
 
-    // reset the stack.
-    bl init_stack
+    // reset the stack for the call to kernel_main.
+    // mov x0, x19 
+    // bl init_stack
 
-    // Load processor id.
-    mrs x0, mpidr_el1
-    and x0, x0, #0x3
-    
+    // mov x0, x19 
+    //    
     // Start kernel main point.
-    bl kernel_main
+    //bl kernel_main
     b proc_hang // should never come here.
 
 
+// TODO: because I'm using QEMU, the load address of the kernel is 0x80000.
+// Because LOW_MEMORY is 0x40000, if we use the second core, would overwrite the content of the kernel memory region.
+// That's why, enabling other cores should be done after the implementation of virtual memory setup by the core 0.
 // Setup the stack based on the processor id.
+// x0 must contain the processor id.
 init_stack:
-    mrs x0, mpidr_el1
-    and x0, x0, #0x3
     mov x1, #STACK_SIZE
     // Compute the right start of the stack for each processor based on the id.
     mul x1, x0, x1 
@@ -135,4 +134,11 @@ wakeup_core:
     mov x2, 0xd8
     str x1, [x2, x0, LSL #3]
     sev
+    ret
+
+// Get processor id.
+// The result is saved in x0.
+get_processor_id:
+    mrs x0, mpidr_el1
+    and x0, x0, #0x3
     ret
