@@ -5,7 +5,7 @@ BUILD_DIR := build
 CC := clang++
 CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding  
 CFLAGS += -mcpu=cortex-a53+nosimd -mgeneral-regs-only
-CFLAGS += -Wall -nostdlib -O0 -std=c++23 
+CFLAGS += -Wall -nostdlib -O0 -g -std=c++23 
 
 LINKER_SCRIPT := src/linker.ld
 LD = ld.lld
@@ -26,11 +26,13 @@ C_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 C_FILES += $(wildcard $(KERNEL_DIR)/*.cpp)
 C_FILES += $(wildcard $(HARDWARE_DIR)/*.cpp)
 C_FILES += $(wildcard $(MEMORY_DIR)/*.cpp)
+C_FILES += $(wildcard $(PERIPHERALS_DIR)/*.cpp)
 
 ASM_FILES = $(wildcard $(SRC_DIR)/*.S)
 ASM_FILES += $(wildcard $(KERNEL_DIR)/*.S)
 ASM_FILES += $(wildcard $(HARDWARE_DIR)/*.S)
 ASM_FILES += $(wildcard $(MEMORY_DIR)/*.S)
+ASM_FILES += $(wildcard $(PERIPHERALS_DIR)/*.S)
 
 
 OBJ_FILES = $(C_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%_cpp.o)
@@ -64,7 +66,7 @@ qemu-debug-run: kernel8.img
 
 # -serial pty for another terminal
 qemu-run: kernel8.img
-	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -display none -kernel build/kernel8.elf 
+	qemu-system-aarch64 -M raspi3b -serial null -serial stdio -kernel build/kernel8.elf 
 
 
 qemu-uart-run: kernel8.img
