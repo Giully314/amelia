@@ -1,5 +1,7 @@
 #include <amelia/hardware/hardware_utils.hpp>
+#include <amelia/peripherals/irq.hpp>
 #include <amelia/peripherals/mini_uart.hpp>
+#include <amelia/peripherals/system_timer.hpp>
 #include <amelia/printf.hpp>
 #include <amelia/types.hpp>
 
@@ -10,14 +12,20 @@ void putc(void *p, char c) {
 }
 
 auto kernel_main(u64 processor_id) -> void {
+    // Initialize hardware resources.
     MiniUART::init();
+    // For debug purposes.
     init_printf(0, amelia::putc);
+
+    SystemTimer::init();
+    IRQController::enable_all_devices();
+    IRQController::unmask();
+
     printf("kernel main start with EL %d\n", get_el());
-    MiniUART::send_string("kernel main start\n");
     while(true) {
-        printf("waiting\n");
+        // printf("waiting\n");
         // MiniUART::send_string("waiting\n");
-        delay(10000000);
+        delay(100000000);
     }
 }
 } // namespace amelia

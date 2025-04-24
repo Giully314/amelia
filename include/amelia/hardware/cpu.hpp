@@ -1,0 +1,34 @@
+// amelia/hardware/cpu.hpp
+// PURPOSE: Define data related to a CPU.
+//
+// STRUCTS:
+//  CPUContext: Save register data for a context switch.
+//
+// DESCRIPTION:
+//
+
+#include <amelia/types.hpp>
+
+namespace amelia {
+// Save the register content for a context switch.
+// Because the context switch is done by calling a function, the ARM procedure
+// call convention says that it is responsability of the caller to save the other
+// registers not mentioned in this struct.
+struct CPUContext {
+    u64 x19;
+    u64 x20;
+    u64 x21;
+    u64 x22;
+    u64 x23;
+    u64 x24;
+    u64 x25;
+    u64 x26;
+    u64 x27;
+    u64 x28;
+
+    u64 fp; // x29
+    u64 sp; // x9
+    u64 pc;
+};
+
+} // namespace amelia

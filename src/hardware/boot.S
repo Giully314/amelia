@@ -62,14 +62,17 @@ master:
     ldr x0, =SPSR_EL3_VALUE
     msr spsr_el3, x0
 
+    // Set the interrupt vector table address.
+    ldr x0, =INT_VEC_TABLE_ADDRESS
+    msr vbar_el1, x0
+
     // elr_el3 holds the address of the instruction to be executed after eret.
     adr x0, el2_entry
     msr elr_el3, x0
 
     eret
 
-// Exercise 2.1.
-// Initialize system resources here.
+
 el2_entry:
     // Set the program status register.
     ldr x0, =SPSR_EL2_VALUE
