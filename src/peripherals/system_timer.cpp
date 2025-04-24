@@ -19,7 +19,7 @@ auto SystemTimer::init() -> void {
     mem_write32(SYSTEM_TIMER_C1, current_value);
 }
 
-auto SystemTimer::set_interval(u32 interval) -> void {
+auto SystemTimer::set_interval(const u32 interval) -> void {
     current_value = mem_read32(SYSTEM_TIMER_CLO);
     current_interval = interval;
     current_value += interval;

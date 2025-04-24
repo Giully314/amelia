@@ -18,7 +18,7 @@ namespace amelia {
 struct SystemTimer {
     static auto init() -> void;
 
-    static auto set_interval(u32 interval) -> void;
+    static auto set_interval(const u32 interval) -> void;
 
     static auto handle_irq() -> void;
 };
