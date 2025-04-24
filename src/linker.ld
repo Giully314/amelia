@@ -8,9 +8,11 @@ SECTIONS
 {
     . = 0x0;
     .text.ivt : {KEEP(*(.text.ivt))}
+    kernel_img_begin = .;
+    .text : { *(.text .text.*) }
+    kernel_img_end = .;
     . = 0x80000;
     .text.boot : {KEEP(*(.text.boot))}
-    .text : { *(.text .text.*) }
     .rodata : { *(.rodata .rodata.*) }
     .data : { *(.data .data.*) } 
     . = ALIGN(0x8);
@@ -18,3 +20,5 @@ SECTIONS
     .bss : { *(.bss*) }
     bss_end = .;
 }
+
+first_memory_available = kernel_img_end;

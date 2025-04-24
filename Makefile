@@ -27,12 +27,14 @@ C_FILES += $(wildcard $(KERNEL_DIR)/*.cpp)
 C_FILES += $(wildcard $(HARDWARE_DIR)/*.cpp)
 C_FILES += $(wildcard $(MEMORY_DIR)/*.cpp)
 C_FILES += $(wildcard $(PERIPHERALS_DIR)/*.cpp)
+C_FILES += $(wildcard $(DS_DIR)/*.cpp)
 
 ASM_FILES = $(wildcard $(SRC_DIR)/*.S)
 ASM_FILES += $(wildcard $(KERNEL_DIR)/*.S)
 ASM_FILES += $(wildcard $(HARDWARE_DIR)/*.S)
 ASM_FILES += $(wildcard $(MEMORY_DIR)/*.S)
 ASM_FILES += $(wildcard $(PERIPHERALS_DIR)/*.S)
+ASM_FILES += $(wildcard $(DS_DIR)/*.S)
 
 
 OBJ_FILES = $(C_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%_cpp.o)

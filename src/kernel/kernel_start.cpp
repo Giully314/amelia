@@ -5,6 +5,8 @@
 #include <amelia/printf.hpp>
 #include <amelia/types.hpp>
 
+extern amelia::u32 kernel_img_end;
+
 namespace amelia {
 
 void putc(void *p, char c) {
@@ -22,6 +24,7 @@ auto kernel_main(u64 processor_id) -> void {
     IRQController::unmask();
 
     printf("kernel main start with EL %d\n", get_el());
+    printf("End of kernel image: %x\n", kernel_img_end);
     while(true) {
         // printf("waiting\n");
         // MiniUART::send_string("waiting\n");

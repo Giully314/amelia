@@ -7,7 +7,7 @@
 //
 #pragma once
 
-#include <amelia/hardware/memory_config.h>
+#include <amelia/hardware/memory_config.hpp>
 
 #define LOCAL_TIMER_CONTROL_STATUS (LOCAL_IRQ_START + 0x34)
 
