@@ -27,4 +27,17 @@ get_el:
     and x0, x0, #3
     ret
 
+.globl mem_set32
+mem_set32:
+    ldr w2, [x0]
+    orr w2, w1, w2
+    str w2, [x0]
+    ret
 
+.globl mem_clear32
+mem_clear32:
+    ldr w2, [x0]
+    mvn w1, w1
+    and w2, w1, w2
+    str w2, [x0]
+    ret
