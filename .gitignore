@@ -3,3 +3,4 @@ build
 kernel8.img
 emulate
 .DS_Store
+dump.txt
