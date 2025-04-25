@@ -7,8 +7,8 @@ ENTRY (_start)
 SECTIONS 
 {
     . = 0x0;
-    .text.ivt : {KEEP(*(.text.ivt))}
     kernel_img_begin = .;
+    .text.ivt : {KEEP(*(.text.ivt))}
     .text : { *(.text .text.*) }
     kernel_img_end = .;
     . = 0x80000;
