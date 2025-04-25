@@ -7,6 +7,8 @@ For more informations about the design and implementation, check the `doc` direc
 [Raspberry pi os](https://s-matyukevich.github.io/raspberry-pi-os/)  
 [Raspberry pi bare metal](https://github.com/bztsrc/raspi3-tutorial/)  
 [AArch64 Interrupt handling](https://krinkinmu.github.io/2021/01/10/aarch64-interrupt-handling.html)  
+[From 0 to main, bare metal C](https://interrupt.memfault.com/blog/zero-to-main-1)  
+
 ## Books 
 Structured Computer Organization by Tanenbaum, Austin  
 Computer organization and architecture Design for performance by William Stallings  
