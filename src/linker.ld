@@ -12,6 +12,7 @@ SECTIONS
     .text : { *(.text .text.*) }
     kernel_img_end = .;
     . = 0x80000;
+    kernel_boot = .;
     .text.boot : {KEEP(*(.text.boot))}
     .rodata : { *(.rodata .rodata.*) }
     .data : { *(.data .data.*) } 

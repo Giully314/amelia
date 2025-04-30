@@ -1,11 +1,16 @@
 #include <amelia/hardware/hardware_utils.hpp>
+#include <amelia/memory/page_allocator.hpp>
+#include <amelia/memory/pool_allocator.hpp>
 #include <amelia/peripherals/irq.hpp>
 #include <amelia/peripherals/mini_uart.hpp>
 #include <amelia/peripherals/system_timer.hpp>
 #include <amelia/printf.hpp>
 #include <amelia/types.hpp>
 
+extern amelia::u32 kernel_img_begin;
 extern amelia::u32 kernel_img_end;
+extern amelia::u32 mem_beg;
+extern amelia::u32 kernel_boot;
 
 namespace amelia {
 
@@ -24,7 +29,8 @@ auto kernel_main(u64 processor_id) -> void {
     IRQController::unmask();
 
     printf("kernel main start with EL %d\n", get_el());
-    printf("End of kernel image: %x\n", kernel_img_end);
+    printf("kernel image: %x\n%x\n%x\n", &kernel_img_begin, &kernel_img_end, &kernel_boot);
+
     while(true) {
         // printf("waiting\n");
         // MiniUART::send_string("waiting\n");

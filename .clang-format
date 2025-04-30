@@ -11,7 +11,7 @@ AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeTernaryOperators: true
-ColumnLimit: 0
+ColumnLimit: 100
 DerivePointerAlignment: false
 IncludeCategories:
   - Regex: '<[[:alnum:]_]+>'
@@ -41,3 +41,4 @@ SpaceBeforeRangeBasedForLoopColon: false
 Standard: Latest
 TabWidth: 4
 UseTab: Never
+PackConstructorInitializers: NextLine

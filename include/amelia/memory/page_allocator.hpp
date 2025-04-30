@@ -14,8 +14,9 @@ namespace amelia {
 
 class PageAllocator {
 public:
-    static auto allocate() -> MemoryBlock;
-    static auto deallocate(MemoryBlock block) -> void;
+    [[nodiscard]]
+    static auto allocate([[maybe_unused]] const u64 = 0) -> MemoryBlock;
+    static auto deallocate(const MemoryBlock block) -> void;
 
 private:
     inline static bool mem_map[PAGING_PAGES]{false};
