@@ -1,3 +1,4 @@
+#include <amelia/ds/dl_list.hpp>
 #include <amelia/hardware/hardware_utils.hpp>
 #include <amelia/memory/page_allocator.hpp>
 #include <amelia/memory/pool_allocator.hpp>
@@ -30,6 +31,21 @@ auto kernel_main(u64 processor_id) -> void {
 
     printf("kernel main start with EL %d\n", get_el());
     printf("kernel image: %x\n%x\n%x\n", &kernel_img_begin, &kernel_img_end, &kernel_boot);
+
+    PageAllocator pg_alloc;
+    auto block = pg_alloc.allocate();
+    PoolAllocator pool_alloc{block, 24, 8};
+
+    printf("block start: %x\n", block.data);
+
+    auto obj1 = pool_alloc.allocate();
+    auto obj2 = pool_alloc.allocate();
+    auto obj3 = pool_alloc.allocate();
+    printf("obj1 start: %x\n", obj1.data);
+    printf("obj2 start: %x\n", obj2.data);
+    printf("obj3 start: %x\n", obj3.data);
+
+    DLList<i64, PoolAllocator> list{pool_alloc};
 
     while(true) {
         // printf("waiting\n");

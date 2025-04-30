@@ -5,7 +5,7 @@ BUILD_DIR := build
 CC := clang++
 CFLAGS := -c -I$(INCLUDE_DIR) -MMD --target=aarch64-elf -ffreestanding  
 CFLAGS += -mcpu=cortex-a53+nosimd -mgeneral-regs-only
-CFLAGS += -Wall -nostdlib -O0 -g -std=c++23 
+CFLAGS += -Wall -nostdlib -O0 -g -std=c++23 -fno-exceptions -fno-rtti
 
 LINKER_SCRIPT := src/linker.ld
 LD = ld.lld

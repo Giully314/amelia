@@ -26,8 +26,7 @@ struct DLNode {
     DLNode(DLNode &&) = default;
     DLNode &operator=(DLNode &&) = default;
 
-    DLNode(DLNode *prev_, DLNode *next_, const T &data): prev{prev_}, next{next_}, data{data_} {
-    }
+    DLNode(DLNode *prev_, DLNode *next_, const T &data_): prev{prev_}, next{next_}, data{data_} {}
 
     DLNode *prev{nullptr};
     DLNode *next{nullptr};
@@ -35,7 +34,7 @@ struct DLNode {
 };
 
 // TODO: T should be regular.
-template<typename T, raw_allocator TAlloc>
+template<typename T, RawAllocator TAlloc>
 class DLList {
 public:
     using node_type = DLNode<T>;
