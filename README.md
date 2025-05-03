@@ -9,6 +9,9 @@ For more informations about the design and implementation, check the `doc` direc
 [AArch64 Interrupt handling](https://krinkinmu.github.io/2021/01/10/aarch64-interrupt-handling.html)  
 [From 0 to main, bare metal C](https://interrupt.memfault.com/blog/zero-to-main-1)  
 [Building an operating system for raspberry pi](https://jsandler18.github.io/)  
+[Course on OS](https://grasslab.github.io/osdi/en/labs/lab3.html)  
+[Linux kernel teaching](https://linux-kernel-labs.github.io/refs/heads/master/index.html)  
+MIT OS course on youtube.  
 
 ## Books 
 Structured Computer Organization by Tanenbaum, Austin  
