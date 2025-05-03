@@ -20,6 +20,9 @@ class PoolAllocator {
 public:
     PoolAllocator(const MemoryBlock block_, const u64 obj_size_, const u64 alignment_);
 
+    // TODO:
+    ~PoolAllocator();
+
     [[nodiscard]] auto allocate([[maybe_unused]] const u64 = 0) -> MemoryBlock;
     auto deallocate(const MemoryBlock b) -> void;
 
@@ -28,11 +31,11 @@ private:
     u64 obj_size{0};
     u64 alignment{0};
     // Used to keep track of available objects in the pool.
-    byte *bitmap{nullptr};
+    byte* bitmap{nullptr};
     u16 bitmap_size{0};
 
     // Start of the pool in the memory block.
-    byte *pool{nullptr};
+    byte* pool{nullptr};
     // Number of total objects.
     u32 capacity{0};
 };

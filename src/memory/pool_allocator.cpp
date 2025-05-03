@@ -17,12 +17,12 @@ PoolAllocator::PoolAllocator(const MemoryBlock block_, const u64 obj_size_, cons
 
     memzero(block.data, block.size);
 
-    bitmap = reinterpret_cast<byte *>(memalign(block.data, alignment));
+    bitmap = reinterpret_cast<byte*>(memalign(block.data, alignment));
 
     u32 c = block.size / obj_size;
     bitmap_size = max<u16>(c / 8, 1);
 
-    pool = reinterpret_cast<byte *>(memalign(bitmap + bitmap_size, alignment));
+    pool = reinterpret_cast<byte*>(memalign(bitmap + bitmap_size, alignment));
     capacity = c - (reinterpret_cast<ptr_t>(pool) - reinterpret_cast<ptr_t>(block.data));
 
     bitmap_size = max<u16>(capacity / 8, 1);
@@ -38,7 +38,7 @@ auto PoolAllocator::allocate(const u64) -> MemoryBlock {
                 bitmap[i] = bitmap[i] | j;
                 // We return i * 8 because the bitmap is 8 bit per section
                 // + we need to advance based on the free bit * obj_size.
-                return MemoryBlock{(void *)(&pool[i * 8 + (idx * obj_size)]), obj_size};
+                return MemoryBlock{(void*)(&pool[i * 8 + (idx * obj_size)]), obj_size};
             }
             j = j >> 1;
             ++idx;

@@ -15,7 +15,7 @@ extern amelia::u32 kernel_boot;
 
 namespace amelia {
 
-void putc(void *p, char c) {
+void putc(void* p, char c) {
     MiniUART::send((amelia::byte)c);
 }
 
@@ -34,7 +34,7 @@ auto kernel_main(u64 processor_id) -> void {
 
     PageAllocator pg_alloc;
     auto block = pg_alloc.allocate();
-    PoolAllocator pool_alloc{block, 24, 8};
+    PoolAllocator pool_alloc{block, sizeof(DLNode<u64>), 8};
 
     printf("block start: %x\n", block.data);
 
@@ -46,6 +46,12 @@ auto kernel_main(u64 processor_id) -> void {
     printf("obj3 start: %x\n", obj3.data);
 
     DLList<i64, PoolAllocator> list{pool_alloc};
+
+    list.push_back(10);
+    list.push_back(11);
+    list.push_back(14);
+
+    for(auto& e: list) { printf("element %d\n", e); }
 
     while(true) {
         // printf("waiting\n");

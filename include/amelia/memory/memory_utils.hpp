@@ -7,9 +7,9 @@
 
 namespace amelia {
 
-template<typename T>
-constexpr auto construct_at(void *address) -> void {
-    ::new(address) T{};
-}
+// template<typename T>
+// constexpr auto construct_at(void* address) -> T* {
+//     return ::new(address) T{};
+// }
 
 } // namespace amelia

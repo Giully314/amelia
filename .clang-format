@@ -29,7 +29,8 @@ IndentPPDirectives: AfterHash
 IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: false
 Language: Cpp
-PointerAlignment: Right
+PointerAlignment: Left
+ReferenceAlignment: Left
 SpaceAfterCStyleCast: false
 SpaceAfterTemplateKeyword: false
 SpaceAroundPointerQualifiers: After
@@ -42,3 +43,10 @@ Standard: Latest
 TabWidth: 4
 UseTab: Never
 PackConstructorInitializers: NextLine
+RequiresClausePosition: OwnLine
+AllowShortCompoundRequirementOnASingleLine: true
+BreakBeforeConceptDeclarations: Always
+IndentRequiresClause: true
+PenaltyBreakTemplateDeclaration: 0
+RequiresExpressionIndentation: OuterScope
+SeparateDefinitionBlocks: Always

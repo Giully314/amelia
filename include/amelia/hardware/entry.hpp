@@ -46,3 +46,11 @@
 
 #define SYNC_ERROR 16
 #define SYSCALL_ERROR 17
+
+#ifndef __ASSEMBLER__
+
+extern "C" {
+auto ret_from_fork() -> void;
+}
+
+#endif

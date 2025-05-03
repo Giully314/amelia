@@ -8,6 +8,9 @@
 
 namespace amelia {
 
+template<typename T>
+concept Destructible = IsNoThrowDestructibleV<T>;
+
 template<typename T, typename U>
 concept SameAs = IsSameV<T, U>;
 
