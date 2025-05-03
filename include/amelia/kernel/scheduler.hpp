@@ -13,7 +13,6 @@
 
 #include <amelia/ds/dl_list.hpp>
 #include <amelia/kernel/task.hpp>
-#include <amelia/memory/page_allocator.hpp>
 #include <amelia/memory/pool_allocator.hpp>
 
 namespace amelia {

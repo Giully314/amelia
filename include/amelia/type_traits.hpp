@@ -44,4 +44,6 @@ template<typename T>
 template<typename T>
 inline constexpr bool IsNoThrowDestructibleV = IsNoThrowDestructible<T>::value;
 
+// ********************** IS NO THROW DESCRUCTIBLE **********************
+
 } // namespace amelia
