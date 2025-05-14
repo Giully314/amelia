@@ -11,7 +11,8 @@ For more informations about the design and implementation, check the `doc` direc
 [Building an operating system for raspberry pi](https://jsandler18.github.io/)  
 [Course on OS](https://grasslab.github.io/osdi/en/labs/lab3.html)  
 [Linux kernel teaching](https://linux-kernel-labs.github.io/refs/heads/master/index.html)  
-MIT OS course on youtube.  
+MIT OS course on youtube.   
+[Operating systems from 0 to 1](https://tuhdo.github.io/os01/)  
 
 ## Books 
 Structured Computer Organization by Tanenbaum, Austin  
