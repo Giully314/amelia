@@ -1,6 +1,6 @@
 .section ".text.boot"
 
-.global .start
+.global _start
 
 
 // The code is executed on all the cores, so we need to take only 1 core to execute the initial setup and 
@@ -24,8 +24,8 @@ main_core:
     mov sp, x1
 
     // Clean BSS
-    ldr x0, =__bss_start
-    ldr x1, =__bss_end
+    ldr x0, =bss_begin
+    ldr x1, =bss_end
     sub x1, x1, x0
     bl memzero
 
