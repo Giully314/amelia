@@ -1,0 +1,8 @@
+add_executable(amelia_kernel_img main.cpp)
+target_link_options(amelia_kernel_img PRIVATE -T ${CMAKE_SOURCE_DIR}/src/kernel.ld)
+set_target_properties(amelia_kernel_img PROPERTIES LINK_DEPENDS ${CMAKE_SOURCE_DIR}/src/kernel.ld)
+target_link_libraries(amelia_kernel_img PRIVATE amelia_src)
+
+set_target_properties(amelia_kernel_img PROPERTIES OUTPUT_NAME kernel8 SUFFIX .elf LINK_DEPENDS ${CMAKE_SOURCE_DIR}/src/kernel.ld)
+
+add_custom_command(TARGET amelia_kernel_img POST_BUILD COMMAND llvm-objcopy -O binary $<TARGET_FILE:amelia_kernel_img> $<TARGET_FILE_DIR:amelia_kernel_img>/kernel8.img COMMENT "Creating kernel8.img")
