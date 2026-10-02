@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(amelia_compiler_flags INTERFACE)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-target_compile_options(amelia_compiler_flags INTERFACE -Werror -pedantic-errors -Wall -Wextra -Wconversion -Wsign-conversion -mcpu=cortex-a72+nosimd --target=aarch64-elf -ffreestanding -nostdlib)
+target_compile_options(amelia_compiler_flags INTERFACE -Werror -pedantic-errors -Wall -Wextra -Wconversion -Wsign-conversion)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 target_compile_options(amelia_compiler_flags INTERFACE -Werror -pedantic-errors -Wall -Wextra -Wconversion -Wsign-conversion)
 endif()

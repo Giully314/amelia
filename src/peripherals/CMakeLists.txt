@@ -1,0 +1,5 @@
+add_library(amelia_peripherals)
+
+target_sources(amelia_peripherals PRIVATE FILE_SET CXX_MODULES FILES ameliaperipherals_uart1.cppm)
+target_link_libraries(amelia_peripherals PRIVATE amelia_src)
+

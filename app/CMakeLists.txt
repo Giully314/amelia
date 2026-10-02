@@ -1,7 +1,7 @@
 add_executable(amelia_kernel_img main.cpp)
 target_link_options(amelia_kernel_img PRIVATE -T ${CMAKE_SOURCE_DIR}/src/kernel.ld)
 set_target_properties(amelia_kernel_img PROPERTIES LINK_DEPENDS ${CMAKE_SOURCE_DIR}/src/kernel.ld)
-target_link_libraries(amelia_kernel_img PRIVATE amelia_src)
+target_link_libraries(amelia_kernel_img PRIVATE amelia_src amelia_peripherals)
 
 set_target_properties(amelia_kernel_img PROPERTIES OUTPUT_NAME kernel8 SUFFIX .elf LINK_DEPENDS ${CMAKE_SOURCE_DIR}/src/kernel.ld)
 
