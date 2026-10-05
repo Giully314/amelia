@@ -8,6 +8,7 @@ target_sources(amelia_src
     
     PUBLIC  
         memory.S 
+        utils.S
 
     PRIVATE
     FILE_SET private_modules TYPE CXX_MODULES
@@ -17,7 +18,9 @@ target_sources(amelia_src
     FILE_SET CXX_MODULES
     FILES  
     amelia_types.cppm
+    amelia_utils.cppm
 )
 
 
 add_subdirectory(peripherals)
+add_subdirectory(memory)
