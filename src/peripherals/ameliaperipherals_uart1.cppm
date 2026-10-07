@@ -14,6 +14,7 @@ namespace amelia {
 namespace peripherals {
 
 export struct MiniUart {
+    // This must match the clock in config.txt in the real rpi4.
     inline static constexpr u32 clock = 500'000'000;
     inline static constexpr u32 max_queue = 16 * 1024;
 
