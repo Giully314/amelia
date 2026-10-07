@@ -36,3 +36,4 @@ https://stackoverflow.com/questions/58420670/qemu-bios-vs-kernel-vs-device-loade
 
 # BUILD 
 cmake -B build -S . -GNinja --fresh -DCMAKE_TOOLCHAIN_FILE=cmake/clang-toolchain.cmake  
+cmake --build build  
