@@ -36,3 +36,10 @@ read32:
     ret
 
 
+.global get_el
+// Get the current exception level.
+get_el:
+    mrs x0, CurrentEL
+    lsr x0, x0, #2
+    ret
+    
