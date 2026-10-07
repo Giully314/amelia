@@ -1,7 +1,7 @@
 add_library(amelia_peripherals)
 
 target_sources(amelia_peripherals 
-    PRIVATE FILE_SET CXX_MODULES 
+    PUBLIC FILE_SET CXX_MODULES 
     FILES ameliaperipherals_aux.cppm ameliaperipherals_gpio.cppm ameliaperipherals_regs.cppm ameliaperipherals_uart1.cppm)
 
 

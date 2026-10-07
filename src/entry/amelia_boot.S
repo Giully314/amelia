@@ -21,7 +21,7 @@ idle:
 main_core:
     // Set the stack pointer below the _start code.
     ldr x0, =_start
-    mov sp, x1
+    mov sp, x0
 
     // Clean BSS
     ldr x0, =bss_begin
