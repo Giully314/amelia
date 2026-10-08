@@ -10,3 +10,4 @@ target_sources(amelia_entry
 
 
 target_link_libraries(amelia_entry PRIVATE amelia_peripherals amelia_print amelia_utils)
+target_include_directories(amelia_entry PRIVATE ${PROJECT_SOURCE_DIR}/src)

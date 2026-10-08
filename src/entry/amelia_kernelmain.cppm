@@ -16,11 +16,15 @@ export {
             amelia::peripherals::MiniUart::write(c);
         }
 
-        void kernel_main() {
-
+        void kernel_init() {
             amelia::peripherals::MiniUart::init();
-            const static char buffer[] = "hello from amelia kernel!";
             amelia::init_printf(0, putc);
+            const static char buffer[] = "hello from amelia kernel init!";
+            amelia::tfp_printf("%s with exception level %d\n", buffer, amelia::get_el());
+        }
+
+        void kernel_main() {
+            const static char buffer[] = "hello from amelia kernel main!";
             amelia::tfp_printf("%s with exception level %d\n", buffer, amelia::get_el());
             while (true) {}
         }

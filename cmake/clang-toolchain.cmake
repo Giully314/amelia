@@ -13,7 +13,7 @@ set(CMAKE_ASM_COMPILER_TARGET aarch64-none-elf)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # NOTE: the strict-align is necessary until the MMU is implemented, because an unaligned memory access causes a fault.
-set(COMMON_FLAGS "-mcpu=cortex-a72 -mgeneral-regs-only -mstrict-align -ffreestanding -fno-stack-protector -fno-pic")
+set(COMMON_FLAGS "-mcpu=cortex-a72 -mstrict-align -ffreestanding -fno-stack-protector -fno-pic")
 set(CMAKE_C_FLAGS_INIT "${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS_INIT "${COMMON_FLAGS} -fno-exceptions -fno-rtti -fno-threadsafe-statics")
 set(CMAKE_ASM_FLAGS_INIT "${COMMON_FLAGS}")
