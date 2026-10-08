@@ -9,4 +9,4 @@ target_sources(amelia_entry
         amelia_kernelmain.cppm)
 
 
-target_link_libraries(amelia_entry PRIVATE amelia_peripherals)
+target_link_libraries(amelia_entry PRIVATE amelia_peripherals amelia_print)
