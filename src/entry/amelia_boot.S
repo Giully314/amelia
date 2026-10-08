@@ -73,7 +73,9 @@ el2_entry:
 
 // Kernel entry point at el1.
 el1_entry:
-    // Set the stack pointer below the _start code.
+    // Set the stack pointer below the _start code. 
+    // NOTE: i'm really not sure if it's a good idea, but right now it works. The setting of the SP depends if the MMU is enabled, if we are in
+    // single thread and if we want to randomize it for security reasons.
     ldr x0, =_start
     mov sp, x0
 
