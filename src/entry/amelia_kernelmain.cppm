@@ -6,6 +6,7 @@ export module amelia.entry.kernel_main;
 
 import amelia.peripherals.uart1;
 import amelia.print.printf;
+import amelia.utils;
 
 
 export {
@@ -18,9 +19,9 @@ export {
         void kernel_main() {
 
             amelia::peripherals::MiniUart::init();
-            const static char buffer[] = "hello from amelia kernel!\n";
+            const static char buffer[] = "hello from amelia kernel!";
             amelia::init_printf(0, putc);
-            amelia::tfp_printf("%s", buffer);
+            amelia::tfp_printf("%s with exception level %d\n", buffer, amelia::get_el());
             while (true) {}
         }
     }

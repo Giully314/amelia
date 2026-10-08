@@ -1,7 +1,7 @@
 add_library(amelia_utils)
 
 target_sources(amelia_utils
-    PUBLIC
+    PRIVATE
         amelia_utils.S
 
     PUBLIC FILE_SET CXX_MODULES 

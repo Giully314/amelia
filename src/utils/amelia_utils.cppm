@@ -8,5 +8,7 @@ namespace amelia {
     export extern "C" {
         auto write32(u64 address, u32 value) -> void;
         auto read32(u64 address) -> u32;
+        auto get_el() -> u32;
+        auto delay(u64 time) -> void;
     }
 } // namespace amelia
