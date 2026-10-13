@@ -8,9 +8,11 @@
 
 #include <stdint.h>
 
+
 struct ExceptionFrame {
     uint64_t regs[31]; // x0-x30
-    uint64_t sp;
+    uint64_t padding;
+    // uint64_t sp;
     // uint64_t elr_el1;
     // uint64_t spsr_el1;
 };
