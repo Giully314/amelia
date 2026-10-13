@@ -8,6 +8,7 @@ import amelia.peripherals.uart1;
 import amelia.print.printf;
 import amelia.utils;
 import amelia.exceptions.irq;
+import amelia.types;
 
 
 export {
@@ -27,10 +28,13 @@ export {
             amelia::tfp_printf("%s with exception level %d\n", buffer, amelia::get_el());
         }
 
-        void kernel_main() {
+        void kernel_main(amelia::u64 core_id) {
             const static char buffer[] = "hello from amelia kernel main!";
-            amelia::tfp_printf("%s with exception level %d\n", buffer, amelia::get_el());
-            while (true) {}
+            amelia::tfp_printf("%s executing from core %d with exception level %d\n", buffer, core_id, amelia::get_el());
+            while (true) {
+                amelia::delay(1'000'000'000);
+                amelia::tfp_printf("Sleeping...\n");
+            }
         }
     }
 }

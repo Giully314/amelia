@@ -9,7 +9,7 @@
 // make the others in idle state.
 _start:
     mrs x0, mpidr_el1
-    and x0, x0, #3
+    and x0, x0, #0x3
     cbz x0, main_core
     b idle
 
@@ -82,4 +82,7 @@ el1_entry:
     ldr x0, =_start
     mov sp, x0
 
+    // Load processor id.
+    mrs x0, mpidr_el1
+    and x0, x0, #0x3
     bl kernel_main 
