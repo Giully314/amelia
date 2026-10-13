@@ -45,6 +45,9 @@ main_core:
     adr x0, el2_entry
     msr elr_el3, x0 
 
+    adr x0, vectors
+    msr vbar_el1, x0
+
     eret
 
 
