@@ -14,5 +14,5 @@
 
 void asm_offsets() {
     DEFINE(S_EXCEPTION_FRAME_SIZE, sizeof(ExceptionFrame));
-    DEFINE(S_EXCEPTION_FRAME_SP, offsetof(ExceptionFrame, sp));
+    DEFINE(S_EXCEPTION_FRAME_SP, offsetof(ExceptionFrame, padding));
 }
