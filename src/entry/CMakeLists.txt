@@ -10,7 +10,7 @@ target_sources(amelia_entry
         amelia_kernelmain.cppm)
 
 
-target_link_libraries(amelia_entry PRIVATE amelia_peripherals amelia_print amelia_utils amelia_exceptions)
+target_link_libraries(amelia_entry PRIVATE amelia_peripherals amelia_print amelia_utils amelia_exceptions amelia_src)
 target_include_directories(amelia_entry PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
 # Generate a header with sizes/offsets of C++ structs to be used in assembly files.

@@ -11,4 +11,4 @@ target_sources(amelia_exceptions
         ameliaexceptions_gic_regs.cppm
 )
 
-target_link_libraries(amelia_exceptions PRIVATE amelia_print)
+target_link_libraries(amelia_exceptions PRIVATE amelia_print amelia_src)

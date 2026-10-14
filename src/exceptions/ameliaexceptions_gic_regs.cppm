@@ -5,6 +5,8 @@
 
 export module amelia.exceptions.gic_regs;
 
+import amelia.types;
+
 namespace amelia {
 namespace exceptions {
 
@@ -13,7 +15,7 @@ struct GICDRegisters {
 };
 
 
-struct GICCRegister {
+struct GICCRegisters {
     
 };
 

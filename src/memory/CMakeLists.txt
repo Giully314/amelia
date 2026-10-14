@@ -1,6 +1,9 @@
 add_library(amelia_memory)
 
 target_sources(amelia_memory
+    PUBLIC 
+        memory.S
+
     PUBLIC FILE_SET CXX_MODULES 
     FILES ameliamemory_mmio.cppm)
 

@@ -14,7 +14,7 @@ import amelia.types;
 export {
     extern "C" {
         
-        void putc(void *p, char c) {
+        void putc([[maybe_unused]] void *p, char c) {
             amelia::peripherals::MiniUart::write(c);
         }
 

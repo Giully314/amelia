@@ -2,10 +2,7 @@ add_library(amelia_src)
 
 target_link_libraries(amelia_src INTERFACE amelia_compiler_flags)
 
-target_sources(amelia_src     
-    PUBLIC  
-        memory.S 
-    
+target_sources(amelia_src         
     PUBLIC
     FILE_SET CXX_MODULES
     FILES  
