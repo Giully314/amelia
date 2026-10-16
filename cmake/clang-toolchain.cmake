@@ -15,7 +15,9 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 # NOTE: the strict-align is necessary until the MMU is implemented, because an unaligned memory access causes a fault.
 set(COMMON_FLAGS "-mcpu=cortex-a72 -mstrict-align -ffreestanding -fno-stack-protector -fno-pic")
 set(CMAKE_C_FLAGS_INIT "${COMMON_FLAGS}")
-set(CMAKE_CXX_FLAGS_INIT "${COMMON_FLAGS} -fno-exceptions -fno-rtti -fno-threadsafe-statics")
+# NOTE: -nostdinc++ keeps the host libc++ headers (e.g. shipped by Homebrew LLVM) out of the include path, so that
+# headers like <stddef.h> resolve to the clang freestanding ones.
+set(CMAKE_CXX_FLAGS_INIT "${COMMON_FLAGS} -fno-exceptions -fno-rtti -fno-threadsafe-statics -nostdinc++")
 set(CMAKE_ASM_FLAGS_INIT "${COMMON_FLAGS}")
 
 set(CMAKE_EXE_LINKER_FLAGS_INIT "-nostdlib -fuse-ld=lld -static")
