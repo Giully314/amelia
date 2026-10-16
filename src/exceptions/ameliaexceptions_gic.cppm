@@ -25,6 +25,7 @@ public:
 
 
     auto enable() -> void {
+        // Should also set the ipriorityr.
         gicd_->itargetsr[system_timer_irq1] = 1;
         gicd_->isenabler[system_timer_irq1/32] = 1 << (system_timer_irq1 % 32);
     }
