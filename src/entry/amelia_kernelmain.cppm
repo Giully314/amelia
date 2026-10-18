@@ -9,6 +9,7 @@ import amelia.print.printf;
 import amelia.utils;
 import amelia.exceptions.irq;
 import amelia.types;
+import amelia.peripherals.system_timer;
 
 
 export {
@@ -24,6 +25,8 @@ export {
         void kernel_init() {
             amelia::peripherals::MiniUart::init();
             amelia::init_printf(0, putc);
+            amelia::peripherals::SystemTimer::init();
+
             const static char buffer[] = "hello from amelia kernel init!";
             amelia::tfp_printf("%s with exception level %d\n", buffer, amelia::get_el());
         }

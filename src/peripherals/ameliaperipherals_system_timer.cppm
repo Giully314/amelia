@@ -10,28 +10,31 @@ export module amelia.peripherals.system_timer;
 import amelia.types;
 import amelia.peripherals.regs;
 
+
 namespace amelia {
 namespace peripherals {
 
-struct SystemTimer {
-    inline static constexpr ptr_t b = base + 0x00003000;    // System timer base address.
-    inline static constexpr ptr_t cs = b + 0x00;            // control status.
-    inline static constexpr ptr_t clo = b + 0x04;           // counter lower 32 bits.
-    inline static constexpr ptr_t chi = b + 0x08;           // counter higher 32 bits.
-    inline static constexpr ptr_t c0 = b + 0x0c;            // compare 0.
-    inline static constexpr ptr_t c1 = b + 0x10;            // compare 1.
-    inline static constexpr ptr_t c2 = b + 0x14;            // compare 2.
-    inline static constexpr ptr_t c3 = b + 0x18;            // compare 3.
+struct TimerRegisters {
+    u32 cs;            // control status.
+    u32 clo;           // counter lower 32 bits.
+    u32 chi;           // counter higher 32 bits.
+    u32 compare[4];    // compare registers.
+};
 
-
-    SystemTimer() {
-
+export struct SystemTimer {
+    static auto init() -> void {
+        current = regs->clo;
+        current += interval;
+        regs->compare[3] = current;
     }
 
-    auto reset() -> void;
+    // auto reset() -> void;
 
 
 private:
+    inline static TimerRegisters* regs = reinterpret_cast<TimerRegisters*>(base + 0x00003000);
+    inline static constexpr u32 interval = 200'000;
+    inline static u32 current{0};
 };
 
 } // namespace peripherals
