@@ -16,6 +16,8 @@ inline constexpr ptr_t system_timer_irq1 = 97;
 
 export class GIC {
 public:
+    GIC() : GIC(0xFF841000, 0xFF842000) {}
+
     GIC(ptr_t gicd_base, ptr_t gicc_base) : 
         gicd_(reinterpret_cast<GICDRegisters*>(gicd_base)), gicc_(reinterpret_cast<GICCRegisters*>(gicc_base)) {}
 
@@ -28,13 +30,17 @@ public:
         // Should also set the ipriorityr.
         gicd_->itargetsr[system_timer_irq1] = 1;
         gicd_->isenabler[system_timer_irq1/32] = 1 << (system_timer_irq1 % 32);
+
+        gicd_->ctlr = 1;        // enable the distributor.
+        gicc_->pmr = 0xFF;      // let every priority level through.
+        gicc_->ctlr = 1;        // enable the cpu interface.
     }
 
     auto disable() -> void {
         gicd_->icenabler[system_timer_irq1/32] = 1 << (system_timer_irq1 % 32);
     }
 
-private:
+public:
     GICDRegisters* gicd_;
     GICCRegisters* gicc_;
 };

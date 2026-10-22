@@ -10,7 +10,7 @@ import amelia.utils;
 import amelia.exceptions.irq;
 import amelia.types;
 import amelia.peripherals.system_timer;
-
+import amelia.exceptions.gic;
 
 export {
     extern "C" {
@@ -25,7 +25,12 @@ export {
         void kernel_init() {
             amelia::peripherals::MiniUart::init();
             amelia::init_printf(0, putc);
+            
+            auto gic = amelia::exceptions::GIC();
+            gic.enable();
+            
             amelia::peripherals::SystemTimer::init();
+            amelia::irq_enable();
 
             const static char buffer[] = "hello from amelia kernel init!";
             amelia::tfp_printf("%s with exception level %d\n", buffer, amelia::get_el());

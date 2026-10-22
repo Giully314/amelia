@@ -82,7 +82,7 @@ vectors:
     ventry serror_invalid_el1t  // error el1t
 
     ventry sync_invalid_el1h    // sync el1h
-    ventry irq_invalid_el1h              // irq el1h
+    ventry el1_irq     // irq el1h
     ventry fiq_invalid_el1h     // fiq el1h
     ventry serror_invalid_el1h  // error el1h
 
@@ -147,3 +147,9 @@ fiq_invalid_el0_32:
 
 serror_invalid_el0_32:
     handle_invalid_entry SERROR_INVALID_EL0_32 
+
+
+el1_irq:
+    kernel_entry
+    bl handle_irq
+    kernel_exit

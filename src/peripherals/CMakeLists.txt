@@ -11,5 +11,5 @@ target_sources(amelia_peripherals
     )
 
 
-target_link_libraries(amelia_peripherals PRIVATE amelia_src amelia_memory)
+target_link_libraries(amelia_peripherals PRIVATE amelia_src amelia_memory amelia_print)
 

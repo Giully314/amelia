@@ -59,12 +59,11 @@ el2_entry:
     mov sp, x0
 
     // Clean BSS
-    ldr x0, =bss_begin
-    ldr x1, =bss_end
-    sub x1, x1, x0
-    bl memzero
-
-    bl kernel_init
+    // ldr x0, =bss_begin
+    // ldr x1, =bss_end
+    // sub x1, x1, x0
+    // bl memzero
+    // bl kernel_init
 
     ldr x0, =SPSR_EL2_VALUE
     msr spsr_el2, x0
@@ -81,6 +80,16 @@ el1_entry:
     // single thread and if we want to randomize it for security reasons.
     ldr x0, =_start
     mov sp, x0
+
+      // Clean BSS
+    ldr x0, =bss_begin
+    ldr x1, =bss_end
+    sub x1, x1, x0
+    bl memzero
+
+    bl kernel_init
+
+    // TODO: should the stack pointer be reset?
 
     // Load processor id.
     mrs x0, mpidr_el1
